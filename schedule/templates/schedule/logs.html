@@ -3,6 +3,11 @@
 {% block title %}Logs{% endblock %}
 
 {% block content %}
+<div class="d-flex justify-content-end">
+    <div>
+        <a href="{% url 'schedule:home' %}">Home</a>
+    </div>
+</div>
 <p class="text-center">Welcome to the log page</p>
 <table class="table table-striped">
     <thead>

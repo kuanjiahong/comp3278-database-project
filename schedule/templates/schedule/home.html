@@ -1,0 +1,23 @@
+{% extends "schedule/base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-end">
+    <div class="">
+        <a href="{% url 'schedule:logs' %}">View logs</a>
+    </div>
+</div>
+<div class="d-flex justify-content-end">
+    <div class="">
+        Last Login: {{ last_login|default:"dd/mm/yyyy HH:MM:SS" }}
+    </div>
+</div>
+<div class="d-flex justify-content-between">
+    <div class="">Welcome, {{ user_name|default:"Undefined" }}</div>
+    <div class="">Login time: {{ login_time|default:"dd/mm/yyyy HH:MM:SS" }}</div>
+</div>
+
+{% include "schedule/personal_timetable.html" %}
+
+{% endblock %}
