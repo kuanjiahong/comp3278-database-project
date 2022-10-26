@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 
 def login_mainpage(request):
-    return render(request,'schedule/index.html')
+    return render(request,'schedule/login.html')
 
 def view_logs(request):
     context = {
