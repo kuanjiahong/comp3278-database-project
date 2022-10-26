@@ -2,9 +2,8 @@ from email.headerregistry import ContentDispositionHeader
 from django.shortcuts import render
 from django.http import HttpResponse
 
-def hello(request):
-    return HttpResponse("Hello, user!")
-
+def login_mainpage(request):
+    return render(request,'schedule/index.html')
 
 def view_logs(request):
     context = {
