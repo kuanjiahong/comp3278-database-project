@@ -2,9 +2,10 @@
 from genericpath import exists
 from pickletools import uint1
 import re
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from FaceRecognition.faces import face_recognition
 from django.contrib.auth.models import auth
+from django.contrib.auth.decorators import login_required
 import os
 
 def login_mainpage(request):
@@ -25,15 +26,18 @@ def login_mainpage(request):
                 context = {"error": "Incorrect email or password"}
                 return render(request, 'schedule/login.html', context=context)
             auth.login(request, user)
+            return redirect("/schedule/home")
 
     return render(request, 'schedule/login.html')
 
+@login_required
 def view_logs(request):
     context = {
         "sample_log_list": ["None", "None", "None"],
     }
     return render(request, "schedule/logs.html", context)
 
+@login_required
 def home_page(request):
     time_duration = [
         "9:00AM", "9:30AM","10:00AM", "10:30AM","11:00AM", "11:30AM","12:00PM", "12:30PM","1:00PM", "1:30PM",
