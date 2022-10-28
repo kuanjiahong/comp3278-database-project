@@ -30,12 +30,12 @@
                     {% endif %}
                     <div class="form-row">
                         <div class="col-lg-10 mb-3">
-                            <input type="text" name="email" class="form-control p-3" placeholder="Enter Your UID">
+                            <input type="text" name="email" class="form-control p-3" placeholder="Enter your HKU email">
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col-lg-10 mb-3">
-                            <input type="password" name="password" class="form-control p-3" placeholder="Enter Your password">
+                            <input type="password" name="password" class="form-control p-3" placeholder="Enter your password">
                         </div>
                     </div>
                     
@@ -99,7 +99,7 @@ document.getElementById('face_auth_button').addEventListener("click", function()
                 document.getElementById("login_form").appendChild(face_auth);
                 document.forms["login_form"].submit();
             };
-            setTimeout(capture, 5000);
+            setTimeout(capture, 4000);
         });
     }
 });

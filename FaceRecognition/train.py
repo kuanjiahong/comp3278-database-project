@@ -1,3 +1,4 @@
+# import imp
 import os
 import numpy as np
 from PIL import Image
@@ -10,7 +11,7 @@ image_dir = os.path.join(BASE_DIR, "data")
 # Load the OpenCV face recognition detector Haar
 face_cascade = cv2.CascadeClassifier('haarcascade/haarcascade_frontalface_default.xml')
 # Create OpenCV LBPH recognizer for training
-recognizer = cv2.face.LBPHFaceRecognizer_create()
+recognizer = cv2.face.LBPHFaceRecognizer_create(radius=2, neighbors=10, grid_x=10, grid_y=10)
 
 current_id = 0
 label_ids = {}
@@ -22,7 +23,7 @@ for root, dirs, files in os.walk(image_dir):
     for file in files:
         if file.endswith("png") or file.endswith("jpg"):
             path = os.path.join(root, file)
-            label = os.path.basename(root).replace("", "").upper()  # name
+            label = os.path.basename(root).replace("", "")  # name
             print(label, path)
 
             if label in label_ids:
@@ -31,13 +32,16 @@ for root, dirs, files in os.walk(image_dir):
                 label_ids[label] = current_id
                 current_id += 1
             id_ = label_ids[label]
-            print(label_ids)
 
             pil_image = Image.open(path).convert("L")
             image_array = np.array(pil_image, "uint8")
-            print(image_array)
-            # Using multiscle detection
-            faces = face_cascade.detectMultiScale(image_array, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30), flags=cv2.CASCADE_SCALE_IMAGE)
+
+            # Using multiscale detection
+            faces = face_cascade.detectMultiScale(image_array,
+                scaleFactor=1.1,
+                minNeighbors=5,
+                minSize=(200, 200)
+            )
 
             for (x, y, w, h) in faces:
                 roi = image_array[y:y+h, x:x+w]

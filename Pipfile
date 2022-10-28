@@ -14,6 +14,7 @@ mysql-connector-python = "*"
 pyttsx3 = "*"
 pillow = "*"
 pysimplegui = "*"
+tqdm = "*"
 
 [dev-packages]
 

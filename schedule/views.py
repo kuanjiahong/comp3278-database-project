@@ -1,21 +1,31 @@
-from email.headerregistry import ContentDispositionHeader
+# from email.headerregistry import ContentDispositionHeader
 from genericpath import exists
+from pickletools import uint1
 import re
 from django.shortcuts import render
-from django.http import HttpResponse
-from django.template import RequestContext
+from FaceRecognition.faces import face_recognition
+from django.contrib.auth.models import auth
+import os
 
 def login_mainpage(request):
     if request.POST:
-        print(f"Email: {request.POST['email']}")
-        print(f"Password: {request.POST['password']}")
-        
         if 'face_auth' in request.FILES:
             with open('FaceRecognition/face_auth/face_auth_temp.mp4', "wb+") as destination:
                 for chunk in request.FILES['face_auth'].chunks():
                     destination.write(chunk)
-        context = {"error": "Incorrect email or password"}
-        return render(request, 'schedule/login.html', context=context)
+            email = face_recognition()
+            if email == "UNKNOWN USER":
+                context = {"error": "Face NOT recognized"}
+                return render(request, 'schedule/login.html', context=context)
+        else:
+            email = request.POST['email']
+            password = request.POST['password']
+            user = auth.authenticate(username=email, password=password)
+            if user is None:
+                context = {"error": "Incorrect email or password"}
+                return render(request, 'schedule/login.html', context=context)
+            auth.login(request, user)
+
     return render(request, 'schedule/login.html')
 
 def view_logs(request):
