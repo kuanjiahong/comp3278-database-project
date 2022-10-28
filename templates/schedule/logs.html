@@ -1,0 +1,37 @@
+{% extends "schedule/base.html" %}
+
+{% block title %}Logs{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-end">
+    <div>
+        <a href="{% url 'schedule:home' %}">Home</a>
+    </div>
+</div>
+<p class="text-center">Welcome to the log page</p>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">No</th>
+            <th scope="col">Content</th>
+            <th scope="col">Timestamp</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for log in sample_log_list %}
+        <tr>
+            <th scope="row">{{ forloop.counter }}</th>
+            <td>{{ log }}</td>
+            <td>{% now "d/m/Y" %}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <th scope="row" colspan="3" class="text-center">There is no logs to view</th>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+
+    </tfoot>
+</table>
+{% endblock %}
