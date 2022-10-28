@@ -11,7 +11,7 @@ def login_mainpage(request):
         print(f"Password: {request.POST['password']}")
         
         if 'face_auth' in request.FILES:
-            with open('face_auth/face_auth_temp.mp4', "wb+") as destination:
+            with open('FaceRecognition/face_auth/face_auth_temp.mp4', "wb+") as destination:
                 for chunk in request.FILES['face_auth'].chunks():
                     destination.write(chunk)
         context = {"error": "Incorrect email or password"}

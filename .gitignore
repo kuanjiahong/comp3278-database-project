@@ -1,3 +1,4 @@
 db.sqlite3
 FaceRecognition/data
 .DS_Store
+FaceRecognition/face_auth
