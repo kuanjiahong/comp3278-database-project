@@ -1,9 +1,22 @@
 from email.headerregistry import ContentDispositionHeader
+from genericpath import exists
+import re
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.template import RequestContext
 
 def login_mainpage(request):
-    return render(request,'schedule/login.html')
+    if request.POST:
+        print(f"Email: {request.POST['email']}")
+        print(f"Password: {request.POST['password']}")
+        
+        if 'face_auth' in request.FILES:
+            with open('face_auth/face_auth_temp.mp4', "wb+") as destination:
+                for chunk in request.FILES['face_auth'].chunks():
+                    destination.write(chunk)
+        context = {"error": "Incorrect email or password"}
+        return render(request, 'schedule/login.html', context=context)
+    return render(request, 'schedule/login.html')
 
 def view_logs(request):
     context = {
