@@ -12,7 +12,6 @@ def face_recognition(face_auth_path="face_auth/face_auth_temp.mp4"):
             os.chdir(oldwd)
         return "FACE VIDEO NOT FOUND"
     cap = cv2.VideoCapture(face_auth_path)
-    
     # Load recognize and read label from model
     recognizer = cv2.face.LBPHFaceRecognizer_create(radius=2, neighbors=6, grid_x=10, grid_y=10)
 
@@ -27,7 +26,7 @@ def face_recognition(face_auth_path="face_auth/face_auth_temp.mp4"):
     face_cascade = cv2.CascadeClassifier('haarcascade/haarcascade_frontalface_default.xml')
 
     recognized = False
-    for i in range(int(cap.get(cv2.CAP_PROP_FRAME_COUNT))):
+    while cap.grab():
         ret, frame = cap.read()
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         faces = face_cascade.detectMultiScale(gray,
@@ -42,15 +41,15 @@ def face_recognition(face_auth_path="face_auth/face_auth_temp.mp4"):
 
             # predict the id and confidence for faces
             id_, conf = recognizer.predict(roi_gray)
+            print(conf)
             # If the face is recognized
-            if conf >= 100:
+            if conf >= 60:
                 recognized = True
                 result = labels[id_]
                 break
         
         if recognized:
             break
-    
     os.remove(face_auth_path)
     if os.getcwd() != oldwd:
         os.chdir(oldwd)
