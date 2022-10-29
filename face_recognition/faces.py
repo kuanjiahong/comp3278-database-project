@@ -3,9 +3,16 @@ import pickle
 import os
 
 def face_recognition():
-    if os.path.basename(os.getcwd()) != "FaceRecognition":
+    if os.path.basename(os.getcwd()) != "face_recognition":
         oldwd = os.getcwd()
-        os.chdir("FaceRecognition")
+        os.chdir("face_recognition")
+
+    auth_video_path = "face_auth/face_auth_temp.mp4"
+    if not os.path.exists(auth_video_path):
+        if os.getcwd() != oldwd:
+            os.chdir(oldwd)
+        return "FACE VIDEO NOT FOUND"
+    cap = cv2.VideoCapture(auth_video_path)
     
     # Load recognize and read label from model
     recognizer = cv2.face.LBPHFaceRecognizer_create(radius=2, neighbors=6, grid_x=10, grid_y=10)
@@ -19,9 +26,6 @@ def face_recognition():
 
     # Check face_auth video and detect face
     face_cascade = cv2.CascadeClassifier('haarcascade/haarcascade_frontalface_default.xml')
-    auth_video_path = "face_auth/face_auth_temp.mp4"
-    if os.path.exists(auth_video_path):
-        cap = cv2.VideoCapture(auth_video_path)
 
     recognized = False
     for i in range(int(cap.get(cv2.CAP_PROP_FRAME_COUNT))):
@@ -40,7 +44,7 @@ def face_recognition():
             # predict the id and confidence for faces
             id_, conf = recognizer.predict(roi_gray)
             # If the face is recognized
-            if conf >= 60:
+            if conf >= 100:
                 recognized = True
                 result = labels[id_]
                 break
@@ -48,6 +52,7 @@ def face_recognition():
         if recognized:
             break
     
+    os.remove(auth_video_path)
     if os.getcwd() != oldwd:
         os.chdir(oldwd)
     cap.release()

@@ -1,31 +1,33 @@
 # from email.headerregistry import ContentDispositionHeader
-from genericpath import exists
-from pickletools import uint1
-import re
+# from cmath import log
+# from genericpath import exists
+# from pickletools import uint1
+# import re
 from django.shortcuts import render, redirect
-from FaceRecognition.faces import face_recognition
-from django.contrib.auth.models import auth
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-import os
 
 def login_mainpage(request):
     if request.POST:
         if 'face_auth' in request.FILES:
-            with open('FaceRecognition/face_auth/face_auth_temp.mp4', "wb+") as destination:
+            with open('face_recognition/face_auth/face_auth_temp.mp4', "wb+") as face_auth_file:
                 for chunk in request.FILES['face_auth'].chunks():
-                    destination.write(chunk)
-            email = face_recognition()
-            if email == "UNKNOWN USER":
+                    face_auth_file.write(chunk)
+            user = authenticate()
+            if user is None:
                 context = {"error": "Face NOT recognized"}
                 return render(request, 'schedule/login.html', context=context)
+            login(request, user)
+            return redirect("/schedule/home")
+
         else:
             email = request.POST['email']
             password = request.POST['password']
-            user = auth.authenticate(username=email, password=password)
+            user = authenticate(username=email, password=password)
             if user is None:
                 context = {"error": "Incorrect email or password"}
                 return render(request, 'schedule/login.html', context=context)
-            auth.login(request, user)
+            login(request, user)
             return redirect("/schedule/home")
 
     return render(request, 'schedule/login.html')
