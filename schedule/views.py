@@ -1,7 +1,7 @@
+from datetime import tzinfo
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from datetime import datetime, tzinfo
 import pytz
 
 def login_mainpage(request):
@@ -49,8 +49,9 @@ def home_page(request):
         "2:00PM", "2:30PM","3:00PM", "3:30PM","4:00PM", "4:30PM","5:00PM", "5:30PM", 
         "6:00PM", "6:30PM","7:00PM", "7:30PM"
     ]
-
+    
     context = {
+        "last_login": request.user.last_login.astimezone(pytz.timezone("Asia/Hong_Kong")).strftime("%d/%m/%Y %I:%M %p"),
         "time_period": time_duration
     }
     

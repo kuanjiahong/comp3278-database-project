@@ -16,7 +16,7 @@
 <div class="d-flex justify-content-between">
     <div class="">Welcome, {{ user.email|default:"None" }}</div>
     <div class="">
-        Last Login: {{ user.last_login|default:"dd/mm/yyyy HH:MM:SS" }}
+        Last Login: {{ last_login|default:"dd/mm/yyyy HH:MM:SS" }}
     </div>
 </div>
 
