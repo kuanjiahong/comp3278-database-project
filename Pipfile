@@ -15,6 +15,7 @@ pyttsx3 = "*"
 pillow = "*"
 pysimplegui = "*"
 tqdm = "*"
+pytz = "*"
 
 [dev-packages]
 
