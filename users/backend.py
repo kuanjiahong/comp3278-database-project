@@ -6,7 +6,13 @@ User = get_user_model()
 
 class FaceRecognitionAuthBackend(ModelBackend):
     def authenticate(self, request, username=None, password=None):
-        email = face_recognition()
+        csrf_token = request.COOKIES['csrftoken']
+        face_auth_path = 'face_recognition/face_auth/face_auth_' + csrf_token + '.mp4'
+        with open(face_auth_path, "wb+") as face_auth_file:
+            for chunk in request.FILES['face_auth'].chunks():
+                face_auth_file.write(chunk)
+        face_auth_path = 'face_auth/face_auth_' + csrf_token + '.mp4'
+        email = face_recognition(face_auth_path=face_auth_path)
         if email == "UNKNOWN USER" or email == "FACE VIDEO NOT FOUND":
             return None
         try:

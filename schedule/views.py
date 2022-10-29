@@ -10,10 +10,8 @@ def login_mainpage(request):
     if request.POST:
         # if it's a face login
         if 'face_auth' in request.FILES:
-            with open('face_recognition/face_auth/face_auth_temp.mp4', "wb+") as face_auth_file:
-                for chunk in request.FILES['face_auth'].chunks():
-                    face_auth_file.write(chunk)
-            user = authenticate()
+            
+            user = authenticate(request=request)
             
         # otherwise, it's a email-password login
         else:
