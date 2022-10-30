@@ -24,7 +24,7 @@ def login_mainpage(request):
             if user is None:
                 context = {"error": "Incorrect email or password"}
                 return render(request, 'schedule/login.html', context=context)
-
+        # log user in if authentication passed
         login(request, user)
         return redirect("/schedule/home")
 
