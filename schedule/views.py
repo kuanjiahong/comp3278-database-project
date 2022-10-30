@@ -1,4 +1,5 @@
 from datetime import tzinfo
+import re
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -9,8 +10,7 @@ def login_mainpage(request):
         return redirect("/schedule/home")
     if request.POST:
         # if it's a face login
-        if 'face_auth' in request.FILES:
-            
+        if 'face_auth_mp4' in request.FILES or 'face_auth_webm' in request.FILES:
             user = authenticate(request=request)
             
         # otherwise, it's a email-password login

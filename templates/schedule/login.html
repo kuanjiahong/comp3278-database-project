@@ -69,6 +69,7 @@
 var video = document.getElementById('video');
 var recorder;
 var face_video = [];
+var video_type = MediaRecorder.isTypeSupported("video/mp4") ? "video/mp4" : "video/webm";
 
 document.getElementById('face_auth_button').addEventListener("click", function() {
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia && video.hidden) {
@@ -80,20 +81,24 @@ document.getElementById('face_auth_button').addEventListener("click", function()
         }
         navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
             video.srcObject = stream;
-            recorder = new MediaRecorder(stream);
+            
+            recorder = new MediaRecorder(stream, { mimeType: video_type });
             video.play();
             recorder.start();
             video.hidden = !video.hidden;
             recorder.ondataavailable = (e) => { face_video.push(e.data); };
             recorder.onstop = (e) => {
-                const video_blob = new Blob(face_video);
-                const face_auth_file = new File([video_blob], "face_auth.mp4");
+                const video_blob = new Blob(face_video, { type: video_type });
+
+                const face_auth_file = video_type == "video/mp4" ? new File([video_blob], "face_auth.mp4") : new File([video_blob], "face_auth.webm");
                 const data_transfer = new DataTransfer();
                 data_transfer.items.add(face_auth_file);
 
                 var face_auth = document.createElement("input");
                 face_auth.setAttribute("type", "file");
-                face_auth.setAttribute("name", "face_auth");
+                if (video_type == "video/mp4")
+                    face_auth.setAttribute("name", "face_auth_mp4");
+                else face_auth.setAttribute("name", "face_auth_webm");
                 face_auth.hidden = true;
                 face_auth.files = data_transfer.files;
                 document.getElementById("login_form").appendChild(face_auth);
