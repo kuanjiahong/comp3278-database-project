@@ -6,6 +6,9 @@ User = get_user_model()
 
 class FaceRecognitionAuthBackend(ModelBackend):
     def authenticate(self, request, username=None, password=None):
+        if len(request.FILES) == 0:
+            return None
+
         csrf_token = request.COOKIES['csrftoken']
         face_auth_path = 'face_auth/face_auth_' + csrf_token
 

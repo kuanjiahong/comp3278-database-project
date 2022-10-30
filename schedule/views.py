@@ -12,16 +12,19 @@ def login_mainpage(request):
         # if it's a face login
         if 'face_auth_mp4' in request.FILES or 'face_auth_webm' in request.FILES:
             user = authenticate(request=request)
+            if user is None:
+                context = {"error": "Face NOT recognized"}
+                return render(request, 'schedule/login.html', context=context)
             
         # otherwise, it's a email-password login
         else:
             email = request.POST['email']
             password = request.POST['password']
-            user = authenticate(username=email, password=password)
+            user = authenticate(request=request, username=email, password=password)
+            if user is None:
+                context = {"error": "Incorrect email or password"}
+                return render(request, 'schedule/login.html', context=context)
 
-        if user is None:
-            context = {"error": "Face NOT recognized"}
-            return render(request, 'schedule/login.html', context=context)
         login(request, user)
         return redirect("/schedule/home")
 
