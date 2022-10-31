@@ -8,19 +8,24 @@
         <a href="{% url 'schedule:home' %}">Home</a>
     </div>
 </div>
+<div class="d-flex justify-content-end">
+    <div>
+        <a href="{% url 'schedule:logout' %}">Logout</a>
+    </div>
+</div>
 <p class="text-center">Welcome to the log page</p>
 <table class="table table-striped">
     <thead>
         <tr>
-            <th scope="col">No</th>
+            <!-- <th scope="col">No</th> -->
             <th scope="col">Content</th>
             <th scope="col">Timestamp</th>
         </tr>
     </thead>
     <tbody>
-        {% for log in sample_log_list %}
+        {% for log in log_list %}
         <tr>
-            <th scope="row">{{ forloop.counter }}</th>
+            <!-- <th scope="row">{{ forloop.counter }}</th> -->
             <td>{{ log }}</td>
             <td>{% now "d/m/Y" %}</td>
         </tr>

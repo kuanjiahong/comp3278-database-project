@@ -77,6 +77,8 @@ AUTHENTICATION_BACKENDS = (
     'users.backend.FaceRecognitionAuthBackend',
 )
 
+LOGIN_URL = '/schedule/login'
+
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
