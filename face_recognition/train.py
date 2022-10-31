@@ -11,7 +11,7 @@ image_dir = os.path.join(BASE_DIR, "data")
 # Load the OpenCV face recognition detector Haar
 face_cascade = cv2.CascadeClassifier('haarcascade/haarcascade_frontalface_default.xml')
 # Create OpenCV LBPH recognizer for training
-recognizer = cv2.face.LBPHFaceRecognizer_create(radius=2, neighbors=6, grid_x=10, grid_y=10)
+recognizer = cv2.face.LBPHFaceRecognizer_create(radius=2, neighbors=7, grid_x=10, grid_y=10)
 
 current_id = 0
 label_ids = {}

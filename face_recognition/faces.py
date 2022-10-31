@@ -8,7 +8,7 @@ def face_recognition(face_auth_path):
         os.chdir("face_recognition")
 
     # Load recognize and read label from model
-    recognizer = cv2.face.LBPHFaceRecognizer_create(radius=2, neighbors=6, grid_x=10, grid_y=10)
+    recognizer = cv2.face.LBPHFaceRecognizer_create(radius=2, neighbors=7, grid_x=10, grid_y=10)
 
     recognizer.read("train.yml")
 
