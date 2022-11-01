@@ -43,7 +43,7 @@ def face_recognition(face_auth_path):
             id_, conf = recognizer.predict(roi_gray)
             
             # If the face is recognized
-            if conf < 100:
+            if conf < 60:
                 # debugging information
                 font = cv2.FONT_HERSHEY_SIMPLEX
                 name = labels[id_]

@@ -23,15 +23,14 @@ lineType = 2
 for cnt in tqdm(range(1, NUM_IMGS + 1)):
     # Capture frame-by-frame
     ret, frame = video_capture.read()
-
+    frame_copy = frame.copy()
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-    """
     faces = faceCascade.detectMultiScale(
         gray,
         scaleFactor=1.1,
         minNeighbors=5,
-        minSize=(30, 30),
+        minSize=(200, 200),
         flags=cv2.CASCADE_SCALE_IMAGE,
     )
 
@@ -46,12 +45,12 @@ for cnt in tqdm(range(1, NUM_IMGS + 1)):
                 fontScale,
                 fontColor,
                 lineType)
-    """
+
 
     # Display the resulting frame
     cv2.imshow('Video', frame)
     # Store the captured images in `data/Jack`
-    cv2.imwrite("data/{}/{}{:03d}.jpg".format(user_name, user_name, cnt), frame)
+    cv2.imwrite("data/{}/{}{:03d}.jpg".format(user_name, user_name, cnt), frame_copy)
     cnt += 1
 
     key = cv2.waitKey(100)
