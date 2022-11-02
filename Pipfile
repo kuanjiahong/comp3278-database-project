@@ -5,17 +5,14 @@ name = "pypi"
 
 [packages]
 django = "*"
-tzdata = "*"
 mysqlclient = "*"
 numpy = "*"
 opencv-python = "*"
 opencv-contrib-python = "*"
 mysql-connector-python = "*"
-pyttsx3 = "*"
-pillow = "*"
-pysimplegui = "*"
 tqdm = "*"
 pytz = "*"
+pillow = "*"
 
 [dev-packages]
 
