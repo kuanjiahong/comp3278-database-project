@@ -22,34 +22,37 @@
 
 
 <!-- this section will appear when there is class less than one hour -->
-{% if upcoming_class %}
-    <section>
-        <div class="alert alert-primary" role="alert">
-            You have class in less than one hour
-        </div>
-        <div>Course Code: {{ upcoming_class.code|default:"Not specified" }}</div>
-        <div>Course name: {{ upcoming_class.name|default:"Not specified" }}</div>
-        <div>Location: {{ upcoming_class.location|default:"Not specified" }}</div>
-        <div>
-            Teacher message: {{ upcoming_class.teacher_message|default:"Not specified" }}</div>
-        <div>
-            Zoom link:
-            {% if upcoming_class.zoom_link %}
-                <a href='{{ upcoming_classe.zoom_link }}' target="_blank">{{ upcoming_class.zoom_link }}</a>
-            {% else %}
-                Not available
-            {% endif %}
-        </div>
-        <div>
-            Course material: 
-            {% if upcoming_class.course_material %}
-                <a href="{{ upcoming_classe.course_material }}" target="_blank">{{ upcoming_class.course_material }}</a>
-            {% else %}
-                Not available
-            {% endif %}
-        </div>
-        <button type="button" class="btn btn-primary">Send to email</button>
-    </section>
+{% if upcoming_classes %}
+{% for upcoming_class in upcoming_classes %}
+<section>
+    <div class="alert alert-primary" role="alert">
+        You have class in less than one hour
+    </div>
+    <div>Course Code: {{ upcoming_class.code|default:"Not specified" }}</div>
+    <div>Course name: {{ upcoming_class.name|default:"Not specified" }}</div>
+    <div>Location: {{ upcoming_class.location|default:"Not specified" }}</div>
+    <div>
+        Teacher message: {{ upcoming_class.teacher_message|default:"Not specified" }}</div>
+    <div>
+        Zoom link:
+        {% if upcoming_class.zoom_link %}
+            <a href='{{ upcoming_classe.zoom_link }}' target="_blank">{{ upcoming_class.zoom_link }}</a>
+        {% else %}
+            Not available
+        {% endif %}
+    </div>
+    <div>
+        Course material: 
+        {% if upcoming_class.course_material %}
+            <a href="{{ upcoming_classe.course_material }}" target="_blank">{{ upcoming_class.course_material }}</a>
+        {% else %}
+            Not available
+        {% endif %}
+    </div>
+    <button type="button" class="btn btn-primary">Send to email</button>
+</section>
+{% endfor %}
+
 {% endif %}
 
 

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from datetime import datetime, date, timedelta
 import pytz
 from .models import Class, Enrolment, Course
@@ -59,7 +59,7 @@ def home_page(request):
         if so, provide details of the upcoming class and display the full schedule
         otherwise, display the full schedule
     """
-    upcoming_class = retrieve_upcoming_class(request.user.id)
+    upcoming_classes = retrieve_upcoming_classes(request.user.id)
 
     time_duration = [
         "9:00AM", "9:30AM","10:00AM", "10:30AM","11:00AM", "11:30AM","12:00PM", "12:30PM","1:00PM", "1:30PM",
@@ -70,49 +70,60 @@ def home_page(request):
     context = {
         "last_login": request.user.last_login.astimezone(pytz.timezone("Asia/Hong_Kong")).strftime("%d/%m/%Y %I:%M %p"),
         "time_period": time_duration,
-        "upcoming_class": upcoming_class,
+        "upcoming_classes": upcoming_classes,
         # TODO: add full schedule:
         "full_schedule": None,
     }
     
     return render(request, "schedule/home.html", context)
 
-def retrieve_upcoming_class(user_id):
+def retrieve_upcoming_classes(user_id):
+    result = []
     try:
-        # Retrieve the object needed
-        user_enrolment = Enrolment.objects.get(student=user_id)
-        the_course_object = Course.objects.get(pk=user_enrolment.course.id)
-        the_class_object = Class.objects.get(pk=the_course_object.id)
+        # Retrieve all user's enrolment
+        user_all_enrolment = Enrolment.objects.filter(student=user_id)
+        print(user_all_enrolment)
 
-        # Check the day
-        today_weekday = date.today().weekday()
-        the_class_day = Class.WeekDays.values.index(the_class_object.class_day)
-        if today_weekday == the_class_day:
-
-            # Check the time
-            current_time = datetime.now().time()
-            the_class_time = the_class_object.start_time
-            print('current time:', current_time)
-            print('the class time:', the_class_time)
-            difference_in_time = timedelta(hours = the_class_time.hour, minutes=the_class_time.minute) - timedelta(hours=current_time.hour, minutes=current_time.minute)
-            print(difference_in_time.seconds)
-            if difference_in_time.days <= -1 :
-                print("Class is already over or it is ongoing")
-                return None
-            elif difference_in_time.seconds <= 3600:
-                print("Class is starting less than one hour")
-                result = {
-                    "code": the_course_object.code,
-                    "name": the_course_object.name,
-                    "location": the_class_object.location,
-                    "teacher_message": the_class_object.teacher_message,
-                    "zoom_link": the_class_object.zoom_link,
-                    "course_material": the_course_object.moodle_link,
-                }
-            return result
-        else:
-            print("There is no upcoming class")
-            return None
+        # Get the course in each enrolment record
+        for enrolment in user_all_enrolment:
+            user_registerd_course = Course.objects.get(pk=enrolment.course.id)
+            print("This course is:", user_registerd_course)
+            classes = Class.objects.filter(course=user_registerd_course.id) # Retrieve all classess for this course
+            # Check if any of the classess is starting in less than one hour
+            for a_class in classes:
+                print("a class:", a_class)
+                today_weekday = date.today().weekday() # mon: 0 ... sun: 6
+                the_class_day = Class.WeekDays.values.index(a_class.class_day) # mon: 0 ... sun: 6
+                if today_weekday == the_class_day:
+                    current_time = timedelta(hours=datetime.now().time().hour, minutes=datetime.now().time().minute)
+                    the_class_time = timedelta(hours=a_class.start_time.hour, minutes=a_class.start_time.minute)
+                    difference_in_time = the_class_time - current_time
+                    print("the class time:", the_class_time)
+                    print("the current time",current_time)
+                    print("Difference:", difference_in_time)
+                    if difference_in_time.days <= -1:
+                        print("This class is already over or the class is ongoing")
+                        continue
+                    elif difference_in_time.seconds <= 3600: # 1 hour = 3600 seconds
+                        print("This class is starting in less than one hour")
+                        temp = {
+                            "code": user_registerd_course.code,
+                            "name": user_registerd_course.name,
+                            "location": a_class.location,
+                            "teacher_message": a_class.teacher_message,
+                            "zoom_link": a_class.zoom_link,
+                            "course_material": user_registerd_course.moodle_link,
+                        }
+                        result.append(temp)
+                else:
+                    print("This class is not today")
+                    continue
+        
+        # After iterating all the enrolment record, return the array of upcoming classess
+        return result
     except ObjectDoesNotExist:
         print("One of the object does not exist")
+        return None
+    except MultipleObjectsReturned:
+        print("More than one objects were retrieved")
         return None
