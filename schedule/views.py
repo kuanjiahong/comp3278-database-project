@@ -5,6 +5,7 @@ from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from datetime import datetime, date, timedelta
 import pytz
 from .models import Class, Enrolment, Course
+import smtplib
 
 def login_mainpage(request):
     # redirect to home if the user has logged in already
@@ -115,6 +116,23 @@ def retrieve_upcoming_classes(user_id):
                             "course_material": user_registerd_course.moodle_link,
                         }
                         result.append(temp)
+
+                        # Create smtp object to connect to gmail
+                        smtp_object = smtplib.SMTP('smtp.gmail.com', 587)
+                        smtp_object.ehlo()
+                        smtp_object.starttls()
+                        email = "lmeow2001@gmail.com"
+                        password = "xymbwepcwjbovkze"
+                        smtp_object.login(email, password)
+
+                        from_address = email
+                        to_address = "User.objects.get(pk=user_id).email"
+                        subject = "You have class in ONE hour!"
+                        message = "The class " + user_registerd_course.code + " " + user_registerd_course.name + " is starting soon."
+                        msg = "Subject: " + subject + '\n' + message
+
+                        smtp_object.sendmail(from_address, to_address, msg)
+
                 else:
                     print("This class is not today")
                     continue
