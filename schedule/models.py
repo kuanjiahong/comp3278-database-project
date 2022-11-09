@@ -1,3 +1,4 @@
+from operator import truediv
 from django.db import models
 from django.db.models import F
 from django.utils.translation import gettext_lazy as _
@@ -40,13 +41,13 @@ class Enrolment(models.Model):
 
 class Class(models.Model):
     class WeekDays(models.TextChoices):
-        MONDAY = "mon", _("Monday")
-        TUESDAY = "tue", _("Tuesday")
-        WEDNESDAY = "wed", _("Wednesday")
-        THURSDAY = "thu", _("Thursday")
-        FRIDAY = "fri", _("Friday")
-        SATURDAY = "sat", _("Saturday")
-        SUNDAY = "sun", _("Sunday")
+        MONDAY = "1", _("Monday")
+        TUESDAY = "2", _("Tuesday")
+        WEDNESDAY = "3", _("Wednesday")
+        THURSDAY = "4", _("Thursday")
+        FRIDAY = "5", _("Friday")
+        SATURDAY = "6", _("Saturday")
+        SUNDAY = "7", _("Sunday")
 
     class ClassTypes(models.TextChoices):
         TUTORIAL = "T", _("Tutorial")
@@ -59,7 +60,7 @@ class Class(models.Model):
     start_time = models.TimeField()
     end_time = models.TimeField()
     class_type = models.CharField(max_length=1, choices=ClassTypes.choices)
-    zoom_link = models.URLField()
+    zoom_link = models.URLField(blank = True)
     teacher_message = models.CharField(max_length=1000, blank=True)
 
     def __str__(self):

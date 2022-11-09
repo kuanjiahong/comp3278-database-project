@@ -1,30 +1,48 @@
 {% block content %}
 <p class="text-center">Timetable</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col"></th>
-            <th scope="col">Monday</th>
-            <th scope="col">Tuesday</th>
-            <th scope="col">Wednesday</th>
-            <th scope="col">Thursday</th>
-            <th scope="col">Friday</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for time in time_period %}
-        <tr>
-            <th scope="row">{{ time }}</th>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        {% endfor %}
-    </tbody>
-    <tfoot>
+<table class="table" style="table-layout:auto;width:180px">
+  <colgroup>
+    <col span="1" style="background-color:grey">
+    <col span="5" style="background-color:whitesmoke">
+  </colgroup>
+  <thead>
+    <tr>
+      <th scope="col"></th>
+      <th scope="col">Monday</th>
+      <th scope="col">Tuesday</th>
+      <th scope="col">Wednesday</th>
+      <th scope="col">Thursday</th>
+      <th scope="col">Friday</th>
+    </tr>
+  </thead>
+  <tbody>
+    {%comment%}
+    {%for time in time_formatted%}
+    <tr>
+      <th scope="row">{{time}}</th>
 
-    </tfoot>
+      {% for i in '12345'|make_list %}
+      {% for class in classes %}
+      {% if class.Weekday == i and class.Start_time == time %}
+      <td rowspan={{class.Rowspan}}>
+        <span>
+          {{class.Name }}<br />
+          {{ class.Start_time }} to {{ class.End_time }}<br />
+          {{class.Location}}<br />
+          {{class.Type}}
+        </span>
+
+      </td>
+      {%endif%}
+      {%endfor%}
+      {%endfor%}
+
+    </tr>
+    {% endfor %}
+    {%endcomment%}
+    {{timetablestr|safe}}
+  </tbody>
+  <tfoot></tfoot>
 </table>
+
 {% endblock %}
