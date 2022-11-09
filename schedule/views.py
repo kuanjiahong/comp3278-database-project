@@ -1,16 +1,15 @@
-
-from tracemalloc import start
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from datetime import datetime, date, timedelta
-from schedule.models import Course, Class
+from schedule.models import  Class, Enrolment, Course
 import pytz
-from .models import Class, Enrolment, Course
 import smtplib
 import math
 from datetime import datetime
+
+
 def login_mainpage(request):
     # redirect to home if the user has logged in already
     if request.user.is_authenticated:
@@ -130,11 +129,8 @@ def home_page(request):
         "time_formatted": time_formatted,
         "courses": Courses_enrolled,
         "classes": lectures,
-        "timetablestr":timetablestr
-        ,
+        "timetablestr":timetablestr,
         "upcoming_classes": upcoming_classes,
-        # TODO: add full schedule:
-        "full_schedule": None,
     }
     
     return render(request, "schedule/home.html", context)
@@ -154,8 +150,8 @@ def retrieve_upcoming_classes(user_id):
             # Check if any of the classess is starting in less than one hour
             for a_class in classes:
                 print("a class:", a_class)
-                today_weekday = date.today().weekday() # mon: 0 ... sun: 6
-                the_class_day = Class.WeekDays.values.index(a_class.class_day) # mon: 0 ... sun: 6
+                today_weekday = date.today().isoweekday() # mon: 1 ... sun: 7
+                the_class_day = int(a_class.class_day) # mon: 1 ... sun: 7
                 if today_weekday == the_class_day:
                     current_time = timedelta(hours=datetime.now().time().hour, minutes=datetime.now().time().minute)
                     the_class_time = timedelta(hours=a_class.start_time.hour, minutes=a_class.start_time.minute)
