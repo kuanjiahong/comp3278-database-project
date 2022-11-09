@@ -114,7 +114,7 @@ def home_page(request):
                     #print(f'{lecture["Name"]} {lecture["Weekday"]} {lecture["Start_time"]}')
                     
             if found ==0:
-                timetablestr +="<td>"+str(days)+"</td>"
+                timetablestr +="<td>"+"</td>"
                 
         timetablestr+="</tr>"
    
