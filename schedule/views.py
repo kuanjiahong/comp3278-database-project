@@ -106,14 +106,14 @@ def home_page(request):
             #print(days)
             for lecture in lectures:
                 #print(f'time:{days} Lecture:{lecture["Weekday"]}')
-                
+                found =0
                 if(lecture["Start_time"]==time and lecture["Weekday"]==str(days)):
                     timetablestr +="<td"+" rowspan="+"\""+str(lecture["Rowspan"])+"\""+">"+"<span>"+str(lecture["Name"])+"<br />"+str(lecture["Start_time"])+" to " + str(lecture["End_time"])+"<br />"+lecture["Location"]+"<br />"+lecture["Type"]+"</span>"+"</td>"
                     found = 1
                     break
                     #print(f'{lecture["Name"]} {lecture["Weekday"]} {lecture["Start_time"]}')
                     
-            else:
+            if found ==0:
                 timetablestr +="<td>"+str(days)+"</td>"
                 
         timetablestr+="</tr>"
