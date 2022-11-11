@@ -21,3 +21,7 @@ Configure MySQL database
 3. Load db.sql to database `comp3278`
 
     `mysql -u root -p comp3278 < db.sql`
+
+NOTES: If the project failed to run due to missing `/usr/local/lib/libmysqlclient.21.dylib`, make sure you have MySQL installed at `/usr/local/mysql/`, then make a symbolic link for that missing file to the one in the MySQL folder by
+
+    `ln -s /usr/local/mysql/lib/libmysqlclient.21.dylib /usr/local/lib/libmysqlclient.21.dylib`
