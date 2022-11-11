@@ -40,17 +40,47 @@ def login_mainpage(request):
 
 @login_required
 def logout_mainpage(request):
+    email = request.user.email
+    last_login = request.user.last_login.astimezone(pytz.timezone("Asia/Hong_Kong"))
+    remote_addr = request.META['REMOTE_ADDR']
+    time_now = datetime.now().astimezone(pytz.timezone("Asia/Hong_Kong"))
+    duration = (time_now - last_login).total_seconds()
+    log_list = [
+        {
+            "content": f"{email} logged in from {remote_addr}",
+            "timestamp": last_login.strftime('%d/%m/%Y %I:%M:%S %p')
+        },
+        {
+            "content": f"{email} has been logged in for {duration:.2f} seconds",
+            "timestamp": time_now.strftime('%d/%m/%Y %I:%M:%S %p')
+        }
+    ]
+    context = {
+        "log_list": log_list
+    }
     logout(request)
-    return redirect("/schedule/login")
+    return render(request, "schedule/logout.html", context)
 
 
 @login_required
 def view_logs(request):
     email = request.user.email
-    last_login = request.user.last_login.astimezone(pytz.timezone("Asia/Hong_Kong")).strftime("%I:%M %p")
+    last_login = request.user.last_login.astimezone(pytz.timezone("Asia/Hong_Kong"))
     remote_addr = request.META['REMOTE_ADDR']
+    time_now = datetime.now().astimezone(pytz.timezone("Asia/Hong_Kong"))
+    duration = (time_now - last_login).total_seconds()
+    log_list = [
+        {
+            "content": f"{email} logged in from {remote_addr}",
+            "timestamp": last_login.strftime('%d/%m/%Y %I:%M:%S %p')
+        },
+        {
+            "content": f"{email} has been logged in for {duration:.2f} seconds",
+            "timestamp": time_now.strftime('%d/%m/%Y %I:%M:%S %p')
+        }
+    ]
     context = {
-        "log_list": [f"{email} logged in at {last_login} from {remote_addr}"],
+        "log_list": log_list
     }
     return render(request, "schedule/logs.html", context)
 
@@ -109,16 +139,17 @@ def home_page(request):
         timetablestr+="<th scope=\"row\">"+str(time)+"</th>"
         for days in range(1,6):
             #print(days)
+            found = 0
             for lecture in lectures:
                 #print(f'time:{days} Lecture:{lecture["Weekday"]}')
-                found =0
+                # found = 0
                 if(lecture["Start_time"]==time and lecture["Weekday"]==str(days)):
                     timetablestr +="<td style=\"border: none;\""+" rowspan="+"\""+str(lecture["Rowspan"])+"\""+">"+"<span>"+str(lecture["Name"])+"<br />"+str(lecture["Start_time"])+" to " + str(lecture["End_time"])+"<br />"+lecture["Location"]+"<br />"+lecture["Type"]+"</span>"+"</td>"
                     found = 1
                     break
                     #print(f'{lecture["Name"]} {lecture["Weekday"]} {lecture["Start_time"]}')
                     
-            if found ==0:
+            if found == 0:
                 timetablestr +="<td style=\"border: none;\">"+"</td>"
                 
         timetablestr+="</tr>"
