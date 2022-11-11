@@ -12,8 +12,11 @@ Setting up
 Configure MySQL database
 1. Install MySQL with username `root` and password `comp3278`
 2. Create a database named `comp3278`
+
     `mysql -u root -p`
+    
     `create database comp3278;`
+    
     `exit;`
 3. Load db.sql to database `comp3278`
     `mysql -u root -p comp3278 < db.sql`
