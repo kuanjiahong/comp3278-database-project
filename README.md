@@ -1,6 +1,6 @@
 # comp3278-database-project
-comp3278-database-project
 
+comp3278-database-project
 
 Setting up
 
@@ -10,18 +10,26 @@ Setting up
 4. Run the server: `python manage.py runserver`
 
 Configure MySQL database
-1. Install MySQL with username `root` and password `comp3278`
+
+1. Install MySQL with username `root` and password `comp3278` (Can be modified in settings.py --> see NOTES below)
 2. Create a database named `comp3278`
 
-    `mysql -u root -p`
-    
-    `create database comp3278;`
-    
-    `exit;`
+   `mysql -u root -p`
+
+   `create database comp3278;`
+
+   `exit;`
+
 3. Load db.sql to database `comp3278`
 
-    `mysql -u root -p comp3278 < db.sql`
+   `mysql -u root -p comp3278 < db.sql`
 
 NOTES: If the project failed to run due to missing `/usr/local/lib/libmysqlclient.21.dylib`, make sure you have MySQL installed at `/usr/local/mysql/`, then make a symbolic link for that missing file to the one in the MySQL folder by
 
     `ln -s /usr/local/mysql/lib/libmysqlclient.21.dylib /usr/local/lib/libmysqlclient.21.dylib`
+
+If you wish to use your existing MYSQL database,
+
+1. you have to go to settings.py under 'icms' directory
+2. Ctrl+F search "DATABASES"
+3. Modify 'NAME'(i.e. your database name),'USER','PASSWORD' to your own settings
