@@ -19,4 +19,5 @@ Configure MySQL database
     
     `exit;`
 3. Load db.sql to database `comp3278`
+
     `mysql -u root -p comp3278 < db.sql`
