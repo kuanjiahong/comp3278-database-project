@@ -134,9 +134,14 @@ def home_page(request):
         class_ed["Rowspan"] = math.ceil(hour.total_seconds()/1800)
         #print(math.ceil(hour.total_seconds()/1800))
     timetablestr =""
+    weekday = {"1":0,"2":0,"3":0,"4":0,"5":0}
+    class_type ={"L":"Lecture","T":"Tutorial"}
     for time in time_formatted:
         timetablestr+="<tr>"
         timetablestr+="<th scope=\"row\">"+str(time)+"</th>"
+        print("before",time,weekday)
+        skipchance = {"1":1,"2":1,"3":1,"4":1,"5":1}
+        skipped =0
         for days in range(1,6):
             #print(days)
             found = 0
@@ -144,16 +149,26 @@ def home_page(request):
                 #print(f'time:{days} Lecture:{lecture["Weekday"]}')
                 # found = 0
                 if(lecture["Start_time"]==time and lecture["Weekday"]==str(days)):
-                    timetablestr +="<td style=\"border: none;\""+" rowspan="+"\""+str(lecture["Rowspan"])+"\""+">"+"<span>"+str(lecture["Name"])+"<br />"+str(lecture["Start_time"])+" to " + str(lecture["End_time"])+"<br />"+lecture["Location"]+"<br />"+lecture["Type"]+"</span>"+"</td>"
+                    weekday[lecture["Weekday"]] += lecture["Rowspan"]
+                    timetablestr +="<td rowspan="+"\""+str(lecture["Rowspan"])+"\""+">"+"<div class = \"box\"><span>"+str(lecture["Name"])+"<br />"+str(lecture["Start_time"])+" to " + str(lecture["End_time"])+"<br />"+lecture["Location"]+"<br />"+class_type[lecture["Type"]]+"</span></div>"+"</td>"
                     found = 1
                     break
                     #print(f'{lecture["Name"]} {lecture["Weekday"]} {lecture["Start_time"]}')
-                    
-            if found == 0:
-                timetablestr +="<td style=\"border: none;\">"+"</td>"
+            if found ==0:
+                if weekday[str(days)] >0 and skipchance[str(days)]: #skip
+                    weekday[str(days)]-=1
+                    skipped+=1
+                    continue
+                
+                else:
+                    timetablestr +="<td>"+"</td>"
+          
+        for i in range(skipped):
+            timetablestr +="<td ></td>"
+
                 
         timetablestr+="</tr>"
-   
+        print("after",time,weekday)
     context = {
         "last_login": request.user.last_login.astimezone(pytz.timezone("Asia/Hong_Kong")).strftime("%d/%m/%Y %I:%M %p"),
         "time_period": time_duration,

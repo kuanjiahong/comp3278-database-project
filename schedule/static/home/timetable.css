@@ -1,0 +1,25 @@
+.box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: antiquewhite;
+  text-align: center;
+  height: 100%;
+}
+.box > span {
+  font-size: 1vw;
+  padding: 4%;
+}
+td {
+  width: 20%;
+  height: 1px;
+  border: none;
+}
+th {
+  color: aliceblue;
+}
+.weekday {
+  color: black;
+  border: none;
+  text-align: center;
+}

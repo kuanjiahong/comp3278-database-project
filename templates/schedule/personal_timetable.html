@@ -1,4 +1,6 @@
 {% block content %}
+{%load static%}
+<link rel="stylesheet" href="{% static 'home/timetable.css' %}">
 <p class="text-center">Timetable</p>
 <table class="table" style="table-layout:auto;">
   <colgroup>
@@ -7,12 +9,12 @@
   </colgroup>
   <thead>
     <tr>
-      <th scope="col"></th>
-      <th scope="col">Monday</th>
-      <th scope="col">Tuesday</th>
-      <th scope="col">Wednesday</th>
-      <th scope="col">Thursday</th>
-      <th scope="col">Friday</th>
+      <th class="weekday" scope="col"></th>
+      <th class="weekday" scope="col">Monday</th>
+      <th class="weekday" scope="col">Tuesday</th>
+      <th class="weekday" scope="col">Wednesday</th>
+      <th class="weekday" scope="col">Thursday</th>
+      <th class="weekday" scope="col">Friday</th>
     </tr>
   </thead>
   <tbody>
