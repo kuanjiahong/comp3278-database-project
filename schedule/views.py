@@ -105,7 +105,6 @@ def home_page(request):
     # fetch classes into dictionary
     lectures = [
         {
-            # "Name": class_ed.course,
             "Code": class_ed.course.code,
             "Name": class_ed.course.name,
             "Weekday": class_ed.class_day,
