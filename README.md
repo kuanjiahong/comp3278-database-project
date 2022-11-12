@@ -36,4 +36,4 @@ If the project failed to run due to missing `/usr/local/lib/libmysqlclient.21.dy
 If you wish to use your existing MySQL database,
 1. Go to `settings.py` under `icms` directory
 2. Ctrl+F search `DATABASES`
-3. Modify `NAME` (i.e. your database name),`USER`, `PASSWORD` to your own settings
+3. Modify `NAME` (i.e. your database name), `USER`, `PASSWORD` to your own settings
