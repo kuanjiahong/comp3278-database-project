@@ -12,7 +12,6 @@
 <table class="table table-striped">
     <thead>
         <tr>
-            <!-- <th scope="col">No</th> -->
             <th scope="col">Contents</th>
             <th scope="col">Timestamps</th>
         </tr>
@@ -20,7 +19,6 @@
     <tbody>
         {% for log in log_list %}
         <tr>
-            <!-- <th scope="row">{{ forloop.counter }}</th> -->
             <td>{{ log.content }}</td>
             <td>{{ log.timestamp }}</td>
         </tr>
