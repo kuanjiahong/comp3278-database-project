@@ -129,7 +129,8 @@ def home_page(request):
             "Start_time": class_ed.start_time,
             "End_time": class_ed.end_time,
             "Location": class_ed.location,
-            "Type": class_ed.class_type
+            "Type": class_ed.class_type,
+            "Moodle_link": class_ed.course.moodle_link
         } for class_ed in classes
     ]
     # calculate rowspan for each class
@@ -154,7 +155,8 @@ def home_page(request):
                 if lecture["Start_time"] == time and lecture["Weekday"] == str(days):
                     weekday[lecture["Weekday"]] += lecture["Rowspan"]
                     timetablestr += f"<td rowspan=\"{lecture['Rowspan']}\">"
-                    timetablestr += f"<div class = \"box\"><span><b>{lecture['Code']}</b><br >{lecture['Name']}<br />"
+                    timetablestr += f"<div class = \"box\"><span><a href='{lecture['Moodle_link']}'><b>{lecture['Code']}</b></a>"
+                    timetablestr += f"<br >{lecture['Name']}<br />"
                     timetablestr += f"{lecture['Start_time'].strftime('%H:%M')} - {lecture['End_time'].strftime('%H:%M')}<br />"
                     timetablestr += f"{lecture['Location']}<br />"
                     timetablestr += f"{class_type[lecture['Type']]}</span></div></td>"
