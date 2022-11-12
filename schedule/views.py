@@ -106,10 +106,9 @@ def view_logs(request):
 
 @login_required
 def home_page(request):
-   
+   #get enrolled courses of user and its corresponding classes
     courses_enrolled = Course.objects.filter(students = request.user)
     classes = Class.objects.filter(course__in = courses_enrolled).order_by('class_day')
-    # print(classes)
 
     upcoming_classes = retrieve_upcoming_classes(request.user.id)
 
@@ -142,18 +141,21 @@ def home_page(request):
         hour = temp_end - temp_start
         class_ed["Rowspan"] = math.ceil(hour.total_seconds() / 1800)
     timetablestr = ""
+    #dictionary to hold weekday that should be skipped from printing td
     weekday = {"1": 0, "2": 0, "3": 0, "4": 0, "5": 0}
     class_type ={"L": "Lecture", "T": "Tutorial"}
     for time in time_formatted:
         timetablestr += "<tr>"
         timetablestr += f"<th scope=\"row\">{time}</th>"
-        # print("before", time, weekday)
+        #a week can only skip a single weekday
         skipchance = {"1": 1, "2": 1, "3": 1, "4": 1,"5": 1}
+        #hold skipped days
         skipped = 0
         for days in range(1, 6):
+            #flag for searching classes
             found = 0
             for lecture in lectures:
-                if lecture["Start_time"] == time and lecture["Weekday"] == str(days):
+                if lecture["Start_time"] == time and lecture["Weekday"] == str(days):#class found
                     weekday[lecture["Weekday"]] += lecture["Rowspan"]
                     timetablestr += f"<td rowspan=\"{lecture['Rowspan']}\">"
                     timetablestr += f"<div class = \"box\"><span><a href='{lecture['Moodle_link']}'><b>{lecture['Code']}</b></a>"
@@ -164,19 +166,18 @@ def home_page(request):
                     found = 1
                     break
             if found == 0:
-                if weekday[str(days)] > 0 and skipchance[str(days)]: #skip
+                if weekday[str(days)] > 0 and skipchance[str(days)]: #skip the td 
                     weekday[str(days)] -= 1
                     skipped += 1
                     continue
                 else:
                     timetablestr += "<td></td>"
           
-        for i in range(skipped):
+        for i in range(skipped):#add the skipped td back into the row
             timetablestr += "<td></td>"
 
                 
         timetablestr += "</tr>"
-        # print("after", time, weekday)
 
     context = {
         "last_login": request.user.last_login.astimezone(pytz.timezone("Asia/Hong_Kong")).strftime("%d/%m/%Y %I:%M %p"),
