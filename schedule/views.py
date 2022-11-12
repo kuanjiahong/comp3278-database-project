@@ -10,6 +10,7 @@ from users.models import User
 import pytz
 import math
 from datetime import datetime
+from django.http import JsonResponse
 
 def login_mainpage(request):
     # redirect to home if the user has logged in already
@@ -196,8 +197,9 @@ def send_upcoming_classes(request):
     
     # do nothing if there is no upcoming class
     if len(upcoming_classes) == 0:
-        return redirect("/schedule/home")
-    
+        # return redirect("/schedule/home")
+        return JsonResponse({"msg": "No upcoming classes!" })
+
     # otherwise, prepare the email
     subject = "[COMP3278 HKU ICMS] You have class in ONE hour!"
     message = ""
@@ -221,7 +223,7 @@ def send_upcoming_classes(request):
         recipient_list=[User.objects.get(pk=request.user.id).email]
     )
 
-    return redirect("/schedule/home")
+    return JsonResponse({"msg": "Email sent!" })
 
 def retrieve_upcoming_classes(user_id):
     result = []
