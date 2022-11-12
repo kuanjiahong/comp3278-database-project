@@ -4,11 +4,11 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from datetime import datetime, date, timedelta
 from schedule.models import  Class, Enrolment, Course
+from users.models import User
 import pytz
 import smtplib
 import math
 from datetime import datetime
-
 
 def login_mainpage(request):
     # redirect to home if the user has logged in already
@@ -40,6 +40,7 @@ def login_mainpage(request):
 
 @login_required
 def logout_mainpage(request):
+    # print the detailed log when users log out
     email = request.user.email
     last_login = request.user.last_login.astimezone(pytz.timezone("Asia/Hong_Kong"))
     remote_addr = request.META['REMOTE_ADDR']
@@ -60,7 +61,6 @@ def logout_mainpage(request):
     }
     logout(request)
     return render(request, "schedule/logout.html", context)
-
 
 @login_required
 def view_logs(request):
@@ -87,99 +87,115 @@ def view_logs(request):
 @login_required
 def home_page(request):
    
-    Courses_enrolled = Course.objects.filter(students = request.user)
-    Classes = Class.objects.filter(course__in = Courses_enrolled).order_by('class_day')
-    print(Classes)
-    #weekday_order = ["mon","tue","wed","thu","fri","sat","sun"]
-  
-    
+    courses_enrolled = Course.objects.filter(students = request.user)
+    classes = Class.objects.filter(course__in = courses_enrolled).order_by('class_day')
+    # print(classes)
 
-    
-    """
-    TODO:
-        make a query to find user's weekly schedule
-        check if the user has a class within an hour
-        if so, provide details of the upcoming class and display the full schedule
-        otherwise, display the full schedule
-    """
     upcoming_classes = retrieve_upcoming_classes(request.user.id)
-
 
     time_duration = [
        "9:30AM","10:00AM", "10:30AM","11:00AM", "11:30AM","12:00PM", "12:30PM","1:00PM", "1:30PM",
         "2:00PM", "2:30PM","3:00PM", "3:30PM","4:00PM", "4:30PM","5:00PM", "5:30PM", 
         "6:00PM", "6:30PM"
     ]
-    '''time_duration = [
-        "9:30AM", "10:30AM", "11:30AM", "12:30PM", "1:30PM",
-        "2:30PM", "3:30PM", "4:30PM", "5:30PM", 
-        "6:30PM"
-    ]'''
     time_formatted = [datetime.strptime(time,"%I:%M%p").time() for time in time_duration ]
     
-    #[print(time) for time in time_formatted]
-
-
-
-
     # fetch classes into dictionary
-    lectures = [{"Name":class_ed.course,"Weekday":class_ed.class_day,"Rowspan":0,"Start_time":class_ed.start_time,"End_time":class_ed.end_time,"Location":class_ed.location,"Type":class_ed.class_type} for class_ed in Classes]
-    #calculate rowspan for each class
+    lectures = [
+        {
+            "Name": class_ed.course,
+            "Weekday": class_ed.class_day,
+            "Rowspan": 0,
+            "Start_time": class_ed.start_time,
+            "End_time": class_ed.end_time,
+            "Location": class_ed.location,
+            "Type": class_ed.class_type
+        } for class_ed in classes
+    ]
+    # calculate rowspan for each class
     for class_ed in lectures:
         dt = datetime.now()
-        temp_start = datetime.combine(dt,class_ed["Start_time"])
-        temp_end = datetime.combine(dt,class_ed["End_time"])
-        hour = temp_end-temp_start
-        #print(class_ed["Name"])
-        class_ed["Rowspan"] = math.ceil(hour.total_seconds()/1800)
-        #print(math.ceil(hour.total_seconds()/1800))
-    timetablestr =""
-    weekday = {"1":0,"2":0,"3":0,"4":0,"5":0}
-    class_type ={"L":"Lecture","T":"Tutorial"}
+        temp_start = datetime.combine(dt, class_ed["Start_time"])
+        temp_end = datetime.combine(dt, class_ed["End_time"])
+        hour = temp_end - temp_start
+        class_ed["Rowspan"] = math.ceil(hour.total_seconds() / 1800)
+    timetablestr = ""
+    weekday = {"1": 0, "2": 0, "3": 0, "4": 0, "5": 0}
+    class_type ={"L": "Lecture", "T": "Tutorial"}
     for time in time_formatted:
-        timetablestr+="<tr>"
-        timetablestr+="<th scope=\"row\">"+str(time)+"</th>"
-        print("before",time,weekday)
-        skipchance = {"1":1,"2":1,"3":1,"4":1,"5":1}
-        skipped =0
-        for days in range(1,6):
-            #print(days)
+        timetablestr += "<tr>"
+        timetablestr += "<th scope=\"row\">" + str(time) + "</th>"
+        # print("before", time, weekday)
+        skipchance = {"1": 1, "2": 1, "3": 1, "4": 1,"5": 1}
+        skipped = 0
+        for days in range(1, 6):
             found = 0
             for lecture in lectures:
-                #print(f'time:{days} Lecture:{lecture["Weekday"]}')
-                # found = 0
-                if(lecture["Start_time"]==time and lecture["Weekday"]==str(days)):
+                if lecture["Start_time"] == time and lecture["Weekday"] == str(days):
                     weekday[lecture["Weekday"]] += lecture["Rowspan"]
-                    timetablestr +="<td rowspan="+"\""+str(lecture["Rowspan"])+"\""+">"+"<div class = \"box\"><span>"+str(lecture["Name"])+"<br />"+str(lecture["Start_time"])+" to " + str(lecture["End_time"])+"<br />"+lecture["Location"]+"<br />"+class_type[lecture["Type"]]+"</span></div>"+"</td>"
+                    timetablestr += "<td rowspan=" + "\"" + str(lecture["Rowspan"]) + "\"" + ">"
+                    timetablestr += "<div class = \"box\"><span>" + str(lecture["Name"]) + "<br />"
+                    timetablestr += str(lecture["Start_time"].strftime("%H:%M")) + " to " + str(lecture["End_time"].strftime("%H:%M")) + "<br />"
+                    timetablestr += lecture["Location"] + "<br />"
+                    timetablestr += class_type[lecture["Type"]] + "</span></div>" + "</td>"
                     found = 1
                     break
-                    #print(f'{lecture["Name"]} {lecture["Weekday"]} {lecture["Start_time"]}')
-            if found ==0:
-                if weekday[str(days)] >0 and skipchance[str(days)]: #skip
-                    weekday[str(days)]-=1
-                    skipped+=1
+            if found == 0:
+                if weekday[str(days)] > 0 and skipchance[str(days)]: #skip
+                    weekday[str(days)] -= 1
+                    skipped += 1
                     continue
-                
                 else:
-                    timetablestr +="<td>"+"</td>"
+                    timetablestr += "<td>" + "</td>"
           
         for i in range(skipped):
-            timetablestr +="<td ></td>"
+            timetablestr += "<td ></td>"
 
                 
-        timetablestr+="</tr>"
-        print("after",time,weekday)
+        timetablestr += "</tr>"
+        # print("after", time, weekday)
+
     context = {
         "last_login": request.user.last_login.astimezone(pytz.timezone("Asia/Hong_Kong")).strftime("%d/%m/%Y %I:%M %p"),
         "time_period": time_duration,
         "time_formatted": time_formatted,
-        "courses": Courses_enrolled,
+        "courses": courses_enrolled,
         "classes": lectures,
         "timetablestr":timetablestr,
         "upcoming_classes": upcoming_classes,
     }
     
     return render(request, "schedule/home.html", context)
+
+@login_required
+def send_upcoming_classes(request):
+    upcoming_classes = retrieve_upcoming_classes(request.user.id)
+    if len(upcoming_classes) == 0:
+        return redirect("/schedule/home")
+    email = "lmeow2001@gmail.com"
+    password = "xymbwepcwjbovkze"
+    from_address = email
+    to_address = User.objects.get(pk=request.user.id).email
+    subject = "You have class in ONE hour!"
+    message = ""
+    for upcoming_class in upcoming_classes:
+        message += f"The class {upcoming_class['code']} {upcoming_class['name']} is starting soon.\n"
+        message += f"Location: {upcoming_class['location']}\n"
+        message += f"Time: {upcoming_class['start_time']} - {upcoming_class['end_time']}\n"
+        if upcoming_class['teacher_message'] != "":
+            message += f"Teacher's message: {upcoming_class['teacher_message']}\n"
+        if upcoming_class['zoom_link'] != "":
+            message += f"Zoom link: {upcoming_class['zoom_link']}\n\n"
+    message += "COMP3278 HKU ICMS"
+    with smtplib.SMTP('smtp.gmail.com', 587) as smtp_object:
+        smtp_object.ehlo()
+        smtp_object.starttls()
+        smtp_object.login(email, password)
+        msg = f"Subject: {subject}\n"
+        msg += f"From: {from_address}\n"
+        msg += f"To: {to_address}\n{message}"
+        smtp_object.sendmail(from_address, to_address, msg)
+    return redirect("/schedule/home")
 
 def retrieve_upcoming_classes(user_id):
     result = []
@@ -214,28 +230,13 @@ def retrieve_upcoming_classes(user_id):
                             "code": user_registerd_course.code,
                             "name": user_registerd_course.name,
                             "location": a_class.location,
+                            "start_time": a_class.start_time.strftime("%H:%M"),
+                            "end_time": a_class.end_time.strftime("%H:%M"),
                             "teacher_message": a_class.teacher_message,
                             "zoom_link": a_class.zoom_link,
                             "course_material": user_registerd_course.moodle_link,
                         }
                         result.append(temp)
-
-                        # Create smtp object to connect to gmail
-                        smtp_object = smtplib.SMTP('smtp.gmail.com', 587)
-                        smtp_object.ehlo()
-                        smtp_object.starttls()
-                        email = "lmeow2001@gmail.com"
-                        password = "xymbwepcwjbovkze"
-                        smtp_object.login(email, password)
-
-                        from_address = email
-                        to_address = "User.objects.get(pk=user_id).email"
-                        subject = "You have class in ONE hour!"
-                        message = "The class " + user_registerd_course.code + " " + user_registerd_course.name + " is starting soon."
-                        msg = "Subject: " + subject + '\n' + message
-
-                        smtp_object.sendmail(from_address, to_address, msg)
-
                 else:
                     print("This class is not today")
                     continue

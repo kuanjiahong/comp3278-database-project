@@ -28,11 +28,12 @@
     <div class="alert alert-primary" role="alert">
         You have class in less than one hour
     </div>
-    <div>Course Code: {{ upcoming_class.code|default:"Not specified" }}</div>
+    <div>Course code: {{ upcoming_class.code|default:"Not specified" }}</div>
     <div>Course name: {{ upcoming_class.name|default:"Not specified" }}</div>
     <div>Location: {{ upcoming_class.location|default:"Not specified" }}</div>
+    <div>Time: {{ upcoming_class.start_time }} - {{ upcoming_class.end_time  }}</div>
     <div>
-        Teacher message: {{ upcoming_class.teacher_message|default:"Not specified" }}</div>
+        Teacher's message: {{ upcoming_class.teacher_message|default:"Not specified" }}</div>
     <div>
         Zoom link:
         {% if upcoming_class.zoom_link %}
@@ -49,7 +50,10 @@
             Not available
         {% endif %}
     </div>
-    <button type="button" class="btn btn-primary">Send to email</button>
+    <form action="send_to_email">
+        <button type="submit" class="btn btn-primary">Send to email</button>
+    </form>
+    
 </section>
 {% endfor %}
 
