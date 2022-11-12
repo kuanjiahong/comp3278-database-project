@@ -2,16 +2,16 @@
 
 comp3278-database-project
 
-Setting up
+**Setting up**
 
 1. Install `pipenv` using `pip`: `pip install pipenv`
 2. Activate the virtual environment: `pipenv shell`
 3. Install the packages needed: `pipenv install`
 4. Run the server: `python manage.py runserver`
 
-Configure MySQL database
+**Configure MySQL database**
 
-1. Install MySQL with username `root` and password `comp3278` (Can be modified in settings.py --> see NOTES below)
+1. Install MySQL with username `root` and password `comp3278` (can be modified in `settings.py` --> see NOTES below)
 2. Create a database named `comp3278`
 
    `mysql -u root -p`
@@ -24,12 +24,16 @@ Configure MySQL database
 
    `mysql -u root -p comp3278 < db.sql`
 
-NOTES: If the project failed to run due to missing `/usr/local/lib/libmysqlclient.21.dylib`, make sure you have MySQL installed at `/usr/local/mysql/`, then make a symbolic link for that missing file to the one in the MySQL folder by
+**NOTES:**
 
-    `ln -s /usr/local/mysql/lib/libmysqlclient.21.dylib /usr/local/lib/libmysqlclient.21.dylib`
+If the project failed to run due to missing `/usr/local/lib/libmysqlclient.21.dylib`,
 
-If you wish to use your existing MYSQL database,
+1. Make sure you have MySQL installed at `/usr/local/mysql/`
+2. Make a symbolic link for that missing file to the one in the MySQL folder by
+   
+   `ln -s /usr/local/mysql/lib/libmysqlclient.21.dylib /usr/local/lib/libmysqlclient.21.dylib`
 
-1. you have to go to settings.py under 'icms' directory
-2. Ctrl+F search "DATABASES"
-3. Modify 'NAME'(i.e. your database name),'USER','PASSWORD' to your own settings
+If you wish to use your existing MySQL database,
+1. Go to `settings.py` under `icms` directory
+2. Ctrl+F search `DATABASES`
+3. Modify `NAME` (i.e. your database name),`USER`, `PASSWORD` to your own settings
