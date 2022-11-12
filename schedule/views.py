@@ -8,7 +8,6 @@ from datetime import datetime, date, timedelta
 from schedule.models import  Class, Enrolment, Course
 from users.models import User
 import pytz
-import smtplib
 import math
 from datetime import datetime
 
@@ -44,10 +43,19 @@ def login_mainpage(request):
 def logout_mainpage(request):
     # print the detailed log when users log out
     email = request.user.email
+    # take last login time from the user's record
     last_login = request.user.last_login.astimezone(pytz.timezone("Asia/Hong_Kong"))
+    
+    # find the user's IP address from the request body
     remote_addr = request.META['REMOTE_ADDR']
+
+    # take the current time
     time_now = datetime.now().astimezone(pytz.timezone("Asia/Hong_Kong"))
+    
+    # calculate the current duration since the user logged in
     duration = (time_now - last_login).total_seconds()
+
+    # prepare the log list and render the page
     log_list = [
         {
             "content": f"{email} logged in from {remote_addr}",
@@ -67,10 +75,19 @@ def logout_mainpage(request):
 @login_required
 def view_logs(request):
     email = request.user.email
+    # take last login time from the user's record
     last_login = request.user.last_login.astimezone(pytz.timezone("Asia/Hong_Kong"))
+    
+    # find the user's IP address from the request body
     remote_addr = request.META['REMOTE_ADDR']
+
+    # take the current time
     time_now = datetime.now().astimezone(pytz.timezone("Asia/Hong_Kong"))
+    
+    # calculate the current duration since the user logged in
     duration = (time_now - last_login).total_seconds()
+
+    # prepare the log list and render the page
     log_list = [
         {
             "content": f"{email} logged in from {remote_addr}",
