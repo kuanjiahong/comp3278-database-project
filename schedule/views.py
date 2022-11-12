@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from django.core.mail import send_mail
+from django.conf import settings
 from datetime import datetime, date, timedelta
 from schedule.models import  Class, Enrolment, Course
 from users.models import User
@@ -103,7 +105,9 @@ def home_page(request):
     # fetch classes into dictionary
     lectures = [
         {
-            "Name": class_ed.course,
+            # "Name": class_ed.course,
+            "Code": class_ed.course.code,
+            "Name": class_ed.course.name,
             "Weekday": class_ed.class_day,
             "Rowspan": 0,
             "Start_time": class_ed.start_time,
@@ -124,7 +128,7 @@ def home_page(request):
     class_type ={"L": "Lecture", "T": "Tutorial"}
     for time in time_formatted:
         timetablestr += "<tr>"
-        timetablestr += "<th scope=\"row\">" + str(time) + "</th>"
+        timetablestr += f"<th scope=\"row\">{time}</th>"
         # print("before", time, weekday)
         skipchance = {"1": 1, "2": 1, "3": 1, "4": 1,"5": 1}
         skipped = 0
@@ -133,11 +137,11 @@ def home_page(request):
             for lecture in lectures:
                 if lecture["Start_time"] == time and lecture["Weekday"] == str(days):
                     weekday[lecture["Weekday"]] += lecture["Rowspan"]
-                    timetablestr += "<td rowspan=" + "\"" + str(lecture["Rowspan"]) + "\"" + ">"
-                    timetablestr += "<div class = \"box\"><span>" + str(lecture["Name"]) + "<br />"
-                    timetablestr += str(lecture["Start_time"].strftime("%H:%M")) + " to " + str(lecture["End_time"].strftime("%H:%M")) + "<br />"
-                    timetablestr += lecture["Location"] + "<br />"
-                    timetablestr += class_type[lecture["Type"]] + "</span></div>" + "</td>"
+                    timetablestr += f"<td rowspan=\"{lecture['Rowspan']}\">"
+                    timetablestr += f"<div class = \"box\"><span><b>{lecture['Code']}</b><br >{lecture['Name']}<br />"
+                    timetablestr += f"{lecture['Start_time'].strftime('%H:%M')} - {lecture['End_time'].strftime('%H:%M')}<br />"
+                    timetablestr += f"{lecture['Location']}<br />"
+                    timetablestr += f"{class_type[lecture['Type']]}</span></div></td>"
                     found = 1
                     break
             if found == 0:
@@ -146,10 +150,10 @@ def home_page(request):
                     skipped += 1
                     continue
                 else:
-                    timetablestr += "<td>" + "</td>"
+                    timetablestr += "<td></td>"
           
         for i in range(skipped):
-            timetablestr += "<td ></td>"
+            timetablestr += "<td></td>"
 
                 
         timetablestr += "</tr>"
@@ -169,14 +173,15 @@ def home_page(request):
 
 @login_required
 def send_upcoming_classes(request):
+    # retrieve upcoming classes
     upcoming_classes = retrieve_upcoming_classes(request.user.id)
+    
+    # do nothing if there is no upcoming class
     if len(upcoming_classes) == 0:
         return redirect("/schedule/home")
-    email = "lmeow2001@gmail.com"
-    password = "xymbwepcwjbovkze"
-    from_address = email
-    to_address = User.objects.get(pk=request.user.id).email
-    subject = "You have class in ONE hour!"
+    
+    # otherwise, prepare the email
+    subject = "[COMP3278 HKU ICMS] You have class in ONE hour!"
     message = ""
     for upcoming_class in upcoming_classes:
         message += f"The class {upcoming_class['code']} {upcoming_class['name']} is starting soon.\n"
@@ -185,16 +190,19 @@ def send_upcoming_classes(request):
         if upcoming_class['teacher_message'] != "":
             message += f"Teacher's message: {upcoming_class['teacher_message']}\n"
         if upcoming_class['zoom_link'] != "":
-            message += f"Zoom link: {upcoming_class['zoom_link']}\n\n"
-    message += "COMP3278 HKU ICMS"
-    with smtplib.SMTP('smtp.gmail.com', 587) as smtp_object:
-        smtp_object.ehlo()
-        smtp_object.starttls()
-        smtp_object.login(email, password)
-        msg = f"Subject: {subject}\n"
-        msg += f"From: {from_address}\n"
-        msg += f"To: {to_address}\n{message}"
-        smtp_object.sendmail(from_address, to_address, msg)
+            message += f"Zoom link: {upcoming_class['zoom_link']}\n"
+        message += f"Course material: {upcoming_class['course_material']}\n\n"
+    message += "Please DO NOT reply to this email.\n\n"
+    message += "Regards,\nCOMP3278 HKU ICMS"
+    
+    # send the email
+    send_mail(
+        subject=subject,
+        message=message,
+        from_email=settings.EMAIL_HOST_USER,
+        recipient_list=[User.objects.get(pk=request.user.id).email]
+    )
+
     return redirect("/schedule/home")
 
 def retrieve_upcoming_classes(user_id):
