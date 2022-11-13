@@ -7,7 +7,10 @@ comp3278-database-project
 1. Install `pipenv` using `pip`: `pip install pipenv`
 2. Activate the virtual environment: `pipenv shell`
 3. Install the packages needed: `pipenv install`
-4. Run the server: `python manage.py runserver`
+
+**Run the program**
+1. Apply migration (if there is any): `python manage.py migrate`
+2. Run the server: `python manage.py runserver`
 
 **Configure MySQL database**
 
@@ -24,6 +27,11 @@ comp3278-database-project
 
    `mysql -u root -p comp3278 < db.sql`
 
+If you wish to use your existing MySQL database,
+1. Go to `settings.py` under `icms` directory
+2. Ctrl-F search `DATABASES`
+3. Modify `NAME` (i.e. your database name), `USER`, `PASSWORD` to your own settings
+
 **NOTES:**
 
 If the project failed to run due to missing `/usr/local/lib/libmysqlclient.21.dylib`,
@@ -33,7 +41,4 @@ If the project failed to run due to missing `/usr/local/lib/libmysqlclient.21.dy
    
    `ln -s /usr/local/mysql/lib/libmysqlclient.21.dylib /usr/local/lib/libmysqlclient.21.dylib`
 
-If you wish to use your existing MySQL database,
-1. Go to `settings.py` under `icms` directory
-2. Ctrl-F search `DATABASES`
-3. Modify `NAME` (i.e. your database name), `USER`, `PASSWORD` to your own settings
+
