@@ -18,30 +18,6 @@
     </tr>
   </thead>
   <tbody>
-    {%comment%}
-    {%for time in time_formatted%}
-    <tr>
-      <th scope="row">{{time}}</th>
-
-      {% for i in '12345'|make_list %}
-      {% for class in classes %}
-      {% if class.Weekday == i and class.Start_time == time %}
-      <td rowspan={{class.Rowspan}}>
-        <span>
-          {{class.Name }}<br />
-          {{ class.Start_time }} to {{ class.End_time }}<br />
-          {{class.Location}}<br />
-          {{class.Type}}
-        </span>
-
-      </td>
-      {%endif%}
-      {%endfor%}
-      {%endfor%}
-
-    </tr>
-    {% endfor %}
-    {%endcomment%}
     {{timetablestr|safe}}
   </tbody>
   <tfoot></tfoot>

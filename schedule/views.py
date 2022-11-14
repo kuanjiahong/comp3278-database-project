@@ -115,11 +115,11 @@ def home_page(request):
     upcoming_classes = retrieve_upcoming_classes(request.user.id)
 
     time_duration = [
-       "9:30AM","10:00AM", "10:30AM","11:00AM", "11:30AM","12:00PM", "12:30PM","1:00PM", "1:30PM",
+        "9:30AM","10:00AM", "10:30AM","11:00AM", "11:30AM","12:00PM", "12:30PM","1:00PM", "1:30PM",
         "2:00PM", "2:30PM","3:00PM", "3:30PM","4:00PM", "4:30PM","5:00PM", "5:30PM", 
-        "6:00PM", "6:30PM"
+        "6:00PM", "6:30PM", "7:00PM", "7:30PM", "8:00PM", "8:30PM", "9:00PM", "9:30PM", "10:00PM" 
     ]
-    time_formatted = [datetime.strptime(time,"%I:%M%p").time() for time in time_duration ]
+    time_formatted = [datetime.strptime(time,"%I:%M%p").time() for time in time_duration]
     
     # fetch classes into dictionary
     lectures = [
@@ -148,7 +148,7 @@ def home_page(request):
     class_type ={"L": "Lecture", "T": "Tutorial"}
     for time in time_formatted:
         timetablestr += "<tr>"
-        timetablestr += f"<th scope=\"row\">{time}</th>"
+        timetablestr += f"<th scope=\"row\">{time.strftime('%I:%M%p')}</th>"
         # a week can only skip a single weekday
         skipchance = {"1": 1, "2": 1, "3": 1, "4": 1,"5": 1}
         # hold skipped days
@@ -162,7 +162,7 @@ def home_page(request):
                     timetablestr += f"<td rowspan=\"{lecture['Rowspan']}\">"
                     timetablestr += f"<div class = \"box\"><span><a href='{lecture['Moodle_link']}'><b>{lecture['Code']}</b></a>"
                     timetablestr += f"<br >{lecture['Name']}<br />"
-                    timetablestr += f"{lecture['Start_time'].strftime('%H:%M')} - {lecture['End_time'].strftime('%H:%M')}<br />"
+                    timetablestr += f"{lecture['Start_time'].strftime('%I:%M %p')} - {lecture['End_time'].strftime('%I:%M %p')}<br />"
                     timetablestr += f"{lecture['Location']}<br />"
                     timetablestr += f"{class_type[lecture['Type']]}</span></div></td>"
                     found = 1
@@ -183,10 +183,8 @@ def home_page(request):
 
     context = {
         "last_login": request.user.last_login.astimezone(pytz.timezone("Asia/Hong_Kong")).strftime("%d/%m/%Y %I:%M %p"),
-        "time_period": time_duration,
         "time_formatted": time_formatted,
-        "courses": courses_enrolled,
-        "classes": lectures,
+        # "classes": lectures,
         "timetablestr":timetablestr,
         "upcoming_classes": upcoming_classes,
     }
@@ -257,8 +255,8 @@ def retrieve_upcoming_classes(user_id):
                             "code": user_registerd_course.code,
                             "name": user_registerd_course.name,
                             "location": a_class.location,
-                            "start_time": a_class.start_time.strftime("%H:%M"),
-                            "end_time": a_class.end_time.strftime("%H:%M"),
+                            "start_time": a_class.start_time.strftime("%I:%M %p"),
+                            "end_time": a_class.end_time.strftime("%I:%M %p"),
                             "teacher_message": a_class.teacher_message,
                             "zoom_link": a_class.zoom_link,
                             "course_material": user_registerd_course.moodle_link,

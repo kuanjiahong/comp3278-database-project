@@ -117,7 +117,7 @@ CREATE TABLE `django_admin_log` (
   CONSTRAINT `django_admin_log_content_type_id_c4bce8eb_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`),
   CONSTRAINT `django_admin_log_user_id_c564eba6_fk_users_user_id` FOREIGN KEY (`user_id`) REFERENCES `users_user` (`id`),
   CONSTRAINT `django_admin_log_chk_1` CHECK ((`action_flag` >= 0))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -126,6 +126,7 @@ CREATE TABLE `django_admin_log` (
 
 LOCK TABLES `django_admin_log` WRITE;
 /*!40000 ALTER TABLE `django_admin_log` DISABLE KEYS */;
+INSERT INTO `django_admin_log` VALUES (1,'2022-11-12 05:33:03.003003','1','COMP3278_1A, L, 1, MWT2, 6, 14:30:00-15:20:00',2,'[{\"changed\": {\"fields\": [\"Class day\"]}}]',4,1),(2,'2022-11-12 06:41:01.377124','1','COMP3278_1A, L, 1, MWT2, 6, 15:30:00-16:20:00',2,'[{\"changed\": {\"fields\": [\"Start time\", \"End time\"]}}]',4,1),(3,'2022-11-12 07:02:54.570402','1','COMP3278_1A, L, 1, MWT2, 1, 14:30:00-15:20:00',2,'[{\"changed\": {\"fields\": [\"Class day\", \"Start time\", \"End time\"]}}]',4,1),(4,'2022-11-12 08:26:09.054888','1','COMP3278_1A, L, 1, MWT2, 1, 17:00:00-20:20:00',2,'[{\"changed\": {\"fields\": [\"Start time\", \"End time\"]}}]',4,1),(5,'2022-11-12 08:27:00.886386','1','COMP3278_1A, L, 1, MWT2, 6, 17:00:00-20:20:00',2,'[{\"changed\": {\"fields\": [\"Class day\"]}}]',4,1),(6,'2022-11-12 09:02:54.708637','1','COMP3278_1A, L, 1, MWT2, 6, 17:30:00-20:20:00',2,'[{\"changed\": {\"fields\": [\"Start time\"]}}]',4,1),(7,'2022-11-12 09:17:06.744755','1','COMP3278_1A, L, 1, MWT2, 1, 14:30:00-15:20:00',2,'[{\"changed\": {\"fields\": [\"Class day\", \"Start time\", \"End time\"]}}]',4,1),(8,'2022-11-12 09:38:47.597285','1','COMP3278_1A Introduction to database management systems',2,'[]',1,1),(9,'2022-11-12 09:38:56.657126','1','COMP3278_1A, L, 1, MWT2, 1, 14:30:00-15:20:00',2,'[{\"changed\": {\"fields\": [\"Zoom link\"]}}]',4,1),(10,'2022-11-12 09:40:08.773032','1','COMP3278_1A, L, 1, MWT2, 1, 14:30:00-15:20:00',2,'[{\"changed\": {\"fields\": [\"Zoom link\"]}}]',4,1),(11,'2022-11-14 15:40:57.121341','1','COMP3278_1A, L, 1, MWT2, 1, 23:59:00-23:59:40',2,'[{\"changed\": {\"fields\": [\"Start time\", \"End time\"]}}]',4,1),(12,'2022-11-14 16:05:59.410113','1','COMP3278_1A, L, 1, MWT2, 2, 00:30:00-01:30:40',2,'[{\"changed\": {\"fields\": [\"Class day\", \"Start time\", \"End time\"]}}]',4,1),(13,'2022-11-14 16:11:17.662366','1','COMP3278_1A, L, 1, MWT2, 1, 14:30:00-15:20:00',2,'[{\"changed\": {\"fields\": [\"Class day\", \"Start time\", \"End time\"]}}]',4,1),(14,'2022-11-14 16:17:20.977958','1','COMP3278_1A, L, 1, MWT2, 2, 00:30:00-01:20:00',2,'[{\"changed\": {\"fields\": [\"Class day\", \"Start time\", \"End time\"]}}]',4,1),(15,'2022-11-14 16:17:45.505471','1','COMP3278_1A, L, 1, MWT2, 1, 14:30:00-15:20:00',2,'[{\"changed\": {\"fields\": [\"Class day\", \"Start time\", \"End time\"]}}]',4,1),(16,'2022-11-14 19:21:20.183025','7','COMP7904_1A Information security: attacks and defense',1,'[{\"added\": {}}]',1,1),(17,'2022-11-14 19:21:35.498345','13','S. M. Yiu, ID 13',1,'[{\"added\": {}}]',2,1),(18,'2022-11-14 19:21:41.180833','14','Ken Ma, ID 14',1,'[{\"added\": {}}]',2,1),(19,'2022-11-14 19:21:53.081851','15','Ken Wong, ID 15',1,'[{\"added\": {}}]',2,1),(20,'2022-11-14 19:22:07.217077','13','S. M. Yiu, COMP7904_1A, L',1,'[{\"added\": {}}]',3,1),(21,'2022-11-14 19:22:15.908232','14','Ken Ma, COMP7904_1A, T',1,'[{\"added\": {}}]',3,1),(22,'2022-11-14 19:22:24.117227','15','Ken Wong, COMP7904_1A, T',1,'[{\"added\": {}}]',3,1),(23,'2022-11-14 19:23:05.063890','13','COMP7904_1A, L, 1, CBC, 4, 19:00:00-21:50:00',1,'[{\"added\": {}}]',4,1),(24,'2022-11-14 19:23:15.588358','8','huanpham@connect.hku.hk COMP7904_1A',1,'[{\"added\": {}}]',5,1);
 /*!40000 ALTER TABLE `django_admin_log` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -203,7 +204,7 @@ CREATE TABLE `django_session` (
 
 LOCK TABLES `django_session` WRITE;
 /*!40000 ALTER TABLE `django_session` DISABLE KEYS */;
-INSERT INTO `django_session` VALUES ('jjeq0q6kvdvu2fcml26ut713fwuohsc8','.eJxVjEEOwiAQRe_C2jQDrVDc6cIDeAEyMwxCTGgi7cp4dyXpQpfv___-SwXc1hy2Js9Qojopow6_GSE_pPaiYxt2Hq7IchNe7rWsZannr3DZp39-xpb764iMIhMlZ9m66Glyhv0IaKJm8IJsZuMkibNEGsgjzQkENBwRiNX7A-DjOLM:1otWiZ:zdSNfU-Sa5OkxZdHtkcJu-YZCmCbkX6q7t_KqxEcdc4','2022-11-25 16:17:23.977546');
+INSERT INTO `django_session` VALUES ('6bi7q46bis5w4n4l8g139mmquso84bbv','.eJxVjM0OwiAQhN-FsyEgXX48evcZCOwuUjU0Ke3J-O62SQ96mmS-b-YtYlqXGtfOcxxJXIQWp98uJ3xy2wE9UrtPEqe2zGOWuyIP2uVtIn5dD_fvoKZet3Uo6Nm5QkAWtLE6qC2gKBgUoA06kAcEn032CtSQA5czE6esjUJnxOcLxws3TQ:1ouc2r:_SWCtM609Jsg995K3xR-72X6xSoZeVI3aCKs3kZ5MF8','2022-11-28 16:10:49.029431'),('b58pydhkygid2xxptx4kcw21cmhgjz3l','.eJxVjEEOwiAQRe_C2jQDrVDc6cIDeAEyMwxCTGgi7cp4dyXpQpfv___-SwXc1hy2Js9Qojopow6_GSE_pPaiYxt2Hq7IchNe7rWsZannr3DZp39-xpb764iMIhMlZ9m66Glyhv0IaKJm8IJsZuMkibNEGsgjzQkENBwRiNX7A-DjOLM:1otWyl:y3CtxvDG3t3t0KOTCacjq0t-qK_V1osqaoVnWY9QKJk','2022-11-25 16:34:07.046618'),('eahukwzewlxvuuexjpls3zrs8k1jsaua','.eJxVjEEOwiAQRe_C2jQDrVDc6cIDeAEyMwxCTGgi7cp4dyXpQpfv___-SwXc1hy2Js9Qojopow6_GSE_pPaiYxt2Hq7IchNe7rWsZannr3DZp39-xpb764iMIhMlZ9m66Glyhv0IaKJm8IJsZuMkibNEGsgjzQkENBwRiNX7A-DjOLM:1ouf3K:y37xqjMghV5fp4jE6EB3sZpI41SrS5ZN30umfiTpJC0','2022-11-28 19:23:30.751196'),('eyagc0qez9tuv0zc642g5t08ir7kyf1t','.eJxVjEEOwiAQAP_C2ZAtrVA8evcNZHdZpGogKe3J-HdD0oNeZybzVgH3LYe9yRqWqC7KqNMvI-SnlC7iA8u9aq5lWxfSPdGHbfpWo7yuR_s3yNhy347IKDJRcpati54mZ9iPgCYODF6QzWycJHGWaADySHMCgQHOCMTq8wUJJTjV:1otkXr:t6NHja2uaZiDr1AzR3AXeVBLi1G2KzW9S7u1nMlzsPM','2022-11-26 07:03:15.482553'),('jpiw6clc8wv0nt245ktapd3ofk8vfoqh','.eJxVjEEOwiAQAP_C2ZAtrVA8evcNZHdZpGogKe3J-HdD0oNeZybzVgH3LYe9yRqWqC7KqNMvI-SnlC7iA8u9aq5lWxfSPdGHbfpWo7yuR_s3yNhy347IKDJRcpati54mZ9iPgCYODF6QzWycJHGWaADySHMCgQHOCMTq8wUJJTjV:1otn0D:Z7bq00A2StVoLiuEo7XMU3q8B_dBlm8z8rUSpSsABRA','2022-11-26 09:40:41.530618'),('o614dll9slto3rx7aed5srtukivdqpsy','.eJxVjEEOwiAQAP_C2ZAtrVA8evcNZHdZpGogKe3J-HdD0oNeZybzVgH3LYe9yRqWqC7KqNMvI-SnlC7iA8u9aq5lWxfSPdGHbfpWo7yuR_s3yNhy347IKDJRcpati54mZ9iPgCYODF6QzWycJHGWaADySHMCgQHOCMTq8wUJJTjV:1otmdu:0LJR_cYcx9N50BPYuMhxpB6nwhSfwXVN3MYrX6gWXXE','2022-11-26 09:17:38.629856');
 /*!40000 ALTER TABLE `django_session` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -229,7 +230,7 @@ CREATE TABLE `schedule_class` (
   UNIQUE KEY `schedule_class_course_id_class_id_66799124_uniq` (`course_id`,`class_id`),
   CONSTRAINT `schedule_class_course_id_422e370d_fk_schedule_course_id` FOREIGN KEY (`course_id`) REFERENCES `schedule_course` (`id`),
   CONSTRAINT `valid_start_end_time` CHECK ((`start_time` < `end_time`))
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -238,7 +239,7 @@ CREATE TABLE `schedule_class` (
 
 LOCK TABLES `schedule_class` WRITE;
 /*!40000 ALTER TABLE `schedule_class` DISABLE KEYS */;
-INSERT INTO `schedule_class` VALUES (1,1,'MWT2','1','14:30:00.000000','15:20:00.000000','L','https://hku.zoom.us/j/96226740999?pwd=ZER1UUdxSVVhQzNXbXFkUDd3WjRBdz09','',1),(2,2,'MWT2','4','13:30:00.000000','15:20:00.000000','L','https://hku.zoom.us/j/96226740999?pwd=ZER1UUdxSVVhQzNXbXFkUDd3WjRBdz09','',1),(3,1,'CPD-LG.18','1','15:30:00.000000','17:20:00.000000','L','https://hku.zoom.us/j/3869089913','',2),(4,2,'CPD-LG.18','5','15:30:00.000000','17:20:00.000000','L','https://hku.zoom.us/j/3869089913','lab on every Friday',2),(5,1,'CPD-LG.01','2','10:30:00.000000','12:20:00.000000','L','','',3),(6,2,'CPD-LG.01','4','10:30:00.000000','12:20:00.000000','L','','',3),(7,1,'CYPP2','2','09:30:00.000000','10:20:00.000000','T','','',4),(8,2,'CYPP2','5','09:30:00.000000','11:20:00.000000','L','','',4),(9,1,'MB167','2','13:30:00.000000','15:20:00.000000','L','https://hku.zoom.us/j/97158080302?pwd=NWViaUw1V3FYT1Y4NWxsT0ZXWENBUT09','',5),(10,2,'MB167','5','14:30:00.000000','15:20:00.000000','T','https://hku.zoom.us/j/94959382241?pwd=ZHJVaXIxS1pZSEEyOEtNK3g5Sys5UT09','',5),(11,1,'CPD-G.03','2','10:30:00.000000','12:20:00.000000','L','','',6),(12,2,'CPD-G.03','5','11:30:00.000000','12:20:00.000000','L','','',6);
+INSERT INTO `schedule_class` VALUES (1,1,'MWT2','1','14:30:00.000000','15:20:00.000000','L','https://hku.zoom.us/j/96226740999?pwd=ZER1UUdxSVVhQzNXbXFkUDd3WjRBdz09','',1),(2,2,'MWT2','4','13:30:00.000000','15:20:00.000000','L','https://hku.zoom.us/j/96226740999?pwd=ZER1UUdxSVVhQzNXbXFkUDd3WjRBdz09','',1),(3,1,'CPD-LG.18','1','15:30:00.000000','17:20:00.000000','L','https://hku.zoom.us/j/3869089913','',2),(4,2,'CPD-LG.18','5','15:30:00.000000','17:20:00.000000','L','https://hku.zoom.us/j/3869089913','lab on every Friday',2),(5,1,'CPD-LG.01','2','10:30:00.000000','12:20:00.000000','L','','',3),(6,2,'CPD-LG.01','4','10:30:00.000000','12:20:00.000000','L','','',3),(7,1,'CYPP2','2','09:30:00.000000','10:20:00.000000','T','','',4),(8,2,'CYPP2','5','09:30:00.000000','11:20:00.000000','L','','',4),(9,1,'MB167','2','13:30:00.000000','15:20:00.000000','L','https://hku.zoom.us/j/97158080302?pwd=NWViaUw1V3FYT1Y4NWxsT0ZXWENBUT09','',5),(10,2,'MB167','5','14:30:00.000000','15:20:00.000000','T','https://hku.zoom.us/j/94959382241?pwd=ZHJVaXIxS1pZSEEyOEtNK3g5Sys5UT09','',5),(11,1,'CPD-G.03','2','10:30:00.000000','12:20:00.000000','L','','',6),(12,2,'CPD-G.03','5','11:30:00.000000','12:20:00.000000','L','','',6),(13,1,'CBC','4','19:00:00.000000','21:50:00.000000','L','','',7);
 /*!40000 ALTER TABLE `schedule_class` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -256,7 +257,7 @@ CREATE TABLE `schedule_course` (
   `offered` tinyint(1) NOT NULL,
   `moodle_link` varchar(200) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -265,7 +266,7 @@ CREATE TABLE `schedule_course` (
 
 LOCK TABLES `schedule_course` WRITE;
 /*!40000 ALTER TABLE `schedule_course` DISABLE KEYS */;
-INSERT INTO `schedule_course` VALUES (1,'COMP3278_1A','Introduction to database management systems',1,'https://moodle.hku.hk/course/view.php?id=96513'),(2,'COMP3322_1A','Modern Technologies on World Wide Web',1,'https://moodle.hku.hk/course/view.php?id=96523'),(3,'COMP3230_1A','Principles of Operating Systems',1,'https://moodle.hku.hk/course/view.php?id=96625'),(4,'COMP3297_1A','Software Engineering',1,'https://moodle.hku.hk/course/view.php?id=96515'),(5,'COMP3258_1A','Functional Programming',1,'https://moodle.hku.hk/course/view.php?id=96637'),(6,'CAES9542_1F','Technical English for Computer Science',1,'https://moodle.hku.hk/course/view.php?id=100843');
+INSERT INTO `schedule_course` VALUES (1,'COMP3278_1A','Introduction to database management systems',1,'https://moodle.hku.hk/course/view.php?id=96513'),(2,'COMP3322_1A','Modern Technologies on World Wide Web',1,'https://moodle.hku.hk/course/view.php?id=96523'),(3,'COMP3230_1A','Principles of Operating Systems',1,'https://moodle.hku.hk/course/view.php?id=96625'),(4,'COMP3297_1A','Software Engineering',1,'https://moodle.hku.hk/course/view.php?id=96515'),(5,'COMP3258_1A','Functional Programming',1,'https://moodle.hku.hk/course/view.php?id=96637'),(6,'CAES9542_1F','Technical English for Computer Science',1,'https://moodle.hku.hk/course/view.php?id=100843'),(7,'COMP7904_1A','Information security: attacks and defense',1,'https://moodle.hku.hk/course/view.php?id=100547');
 /*!40000 ALTER TABLE `schedule_course` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -285,7 +286,7 @@ CREATE TABLE `schedule_enrolment` (
   KEY `schedule_enrolment_student_id_7024ab50_fk_users_user_id` (`student_id`),
   CONSTRAINT `schedule_enrolment_course_id_1911c4d5_fk_schedule_course_id` FOREIGN KEY (`course_id`) REFERENCES `schedule_course` (`id`),
   CONSTRAINT `schedule_enrolment_student_id_7024ab50_fk_users_user_id` FOREIGN KEY (`student_id`) REFERENCES `users_user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -294,7 +295,7 @@ CREATE TABLE `schedule_enrolment` (
 
 LOCK TABLES `schedule_enrolment` WRITE;
 /*!40000 ALTER TABLE `schedule_enrolment` DISABLE KEYS */;
-INSERT INTO `schedule_enrolment` VALUES (1,1,2),(2,1,3),(3,2,3),(4,3,3),(5,4,3),(6,6,2),(7,5,2);
+INSERT INTO `schedule_enrolment` VALUES (1,1,2),(2,1,3),(3,2,3),(4,3,3),(5,4,3),(6,6,2),(7,5,2),(8,7,2);
 /*!40000 ALTER TABLE `schedule_enrolment` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -309,7 +310,7 @@ CREATE TABLE `schedule_staff` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -318,7 +319,7 @@ CREATE TABLE `schedule_staff` (
 
 LOCK TABLES `schedule_staff` WRITE;
 /*!40000 ALTER TABLE `schedule_staff` DISABLE KEYS */;
-INSERT INTO `schedule_staff` VALUES (1,'Ping Luo'),(2,'Yao Mu'),(3,'Yao Lai'),(4,'Yizhou Li'),(5,'Xiaoyang Zhao'),(6,'Shiwei Zhang'),(7,'Leo Yeung'),(8,'Chenshu Wu'),(9,'Chuan Wu'),(10,'Bruno Oliveira'),(11,'Xu Xue'),(12,'Mable Choi');
+INSERT INTO `schedule_staff` VALUES (1,'Ping Luo'),(2,'Yao Mu'),(3,'Yao Lai'),(4,'Yizhou Li'),(5,'Xiaoyang Zhao'),(6,'Shiwei Zhang'),(7,'Leo Yeung'),(8,'Chenshu Wu'),(9,'Chuan Wu'),(10,'Bruno Oliveira'),(11,'Xu Xue'),(12,'Mable Choi'),(13,'S. M. Yiu'),(14,'Ken Ma'),(15,'Ken Wong');
 /*!40000 ALTER TABLE `schedule_staff` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -339,7 +340,7 @@ CREATE TABLE `schedule_teaching` (
   KEY `schedule_teaching_staff_id_fe4b8ee3_fk_schedule_staff_id` (`staff_id`),
   CONSTRAINT `schedule_teaching_course_id_eea830ca_fk_schedule_course_id` FOREIGN KEY (`course_id`) REFERENCES `schedule_course` (`id`),
   CONSTRAINT `schedule_teaching_staff_id_fe4b8ee3_fk_schedule_staff_id` FOREIGN KEY (`staff_id`) REFERENCES `schedule_staff` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -348,7 +349,7 @@ CREATE TABLE `schedule_teaching` (
 
 LOCK TABLES `schedule_teaching` WRITE;
 /*!40000 ALTER TABLE `schedule_teaching` DISABLE KEYS */;
-INSERT INTO `schedule_teaching` VALUES (1,'L',1,1),(2,'T',1,2),(3,'T',1,3),(4,'T',1,4),(5,'T',2,5),(6,'T',2,6),(7,'L',2,9),(8,'L',3,8),(9,'L',4,7),(10,'L',6,12),(11,'L',5,10),(12,'T',5,11);
+INSERT INTO `schedule_teaching` VALUES (1,'L',1,1),(2,'T',1,2),(3,'T',1,3),(4,'T',1,4),(5,'T',2,5),(6,'T',2,6),(7,'L',2,9),(8,'L',3,8),(9,'L',4,7),(10,'L',6,12),(11,'L',5,10),(12,'T',5,11),(13,'L',7,13),(14,'T',7,14),(15,'T',7,15);
 /*!40000 ALTER TABLE `schedule_teaching` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -381,7 +382,7 @@ CREATE TABLE `users_user` (
 
 LOCK TABLES `users_user` WRITE;
 /*!40000 ALTER TABLE `users_user` DISABLE KEYS */;
-INSERT INTO `users_user` VALUES (1,'pbkdf2_sha256$390000$YB4vgqYNKvmCI5UrpRBj4Y$Noe12WjYSL3J9CcO+PxK6P2ys2JWjbTP3UWuWvCnxfo=','2022-11-11 16:17:01.698112',1,'','',1,1,'2022-10-10 10:32:10.772000','admin@cs.hku.hk'),(2,'pbkdf2_sha256$390000$Kyv8QwYFECxtKigic8xfIs$/gHPVCzrL9T+wPlpiJy7OJqXywQiLNAkv7j8Odd/lG8=','2022-11-11 16:17:23.976077',0,'','',0,1,'2022-10-10 10:43:00.788000','huanpham@connect.hku.hk'),(3,'pbkdf2_sha256$390000$mbyOFcRfSTQw3zO5fcF5Uo$MvcQHSUCDTzteIsqrp+7HlsRLI1qjt2SGjSlRTHX9Tw=','2022-11-11 15:50:03.701000',0,'','',0,1,'2022-11-11 15:17:28.405000','benwu013@connect.hku.hk');
+INSERT INTO `users_user` VALUES (1,'pbkdf2_sha256$390000$YB4vgqYNKvmCI5UrpRBj4Y$Noe12WjYSL3J9CcO+PxK6P2ys2JWjbTP3UWuWvCnxfo=','2022-11-14 19:20:31.883122',1,'','',1,1,'2022-10-10 10:32:10.772000','admin@cs.hku.hk'),(2,'pbkdf2_sha256$390000$Kyv8QwYFECxtKigic8xfIs$/gHPVCzrL9T+wPlpiJy7OJqXywQiLNAkv7j8Odd/lG8=','2022-11-14 19:23:30.749482',0,'','',0,1,'2022-10-10 10:43:00.788000','huanpham@connect.hku.hk'),(3,'pbkdf2_sha256$390000$mbyOFcRfSTQw3zO5fcF5Uo$MvcQHSUCDTzteIsqrp+7HlsRLI1qjt2SGjSlRTHX9Tw=','2022-11-11 15:50:03.701000',0,'','',0,1,'2022-11-11 15:17:28.405000','benwu013@connect.hku.hk');
 /*!40000 ALTER TABLE `users_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -450,4 +451,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-11-12  0:19:39
+-- Dump completed on 2022-11-15  3:48:58
