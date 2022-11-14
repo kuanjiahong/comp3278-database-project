@@ -4,6 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.core.mail import send_mail
 from django.conf import settings
+from django.http import HttpResponse
+from smtplib import SMTPException
 from datetime import datetime, date, timedelta
 from schedule.models import  Class, Enrolment, Course
 from users.models import User
@@ -106,7 +108,7 @@ def view_logs(request):
 
 @login_required
 def home_page(request):
-   #get enrolled courses of user and its corresponding classes
+   # get enrolled courses of user and its corresponding classes
     courses_enrolled = Course.objects.filter(students = request.user)
     classes = Class.objects.filter(course__in = courses_enrolled).order_by('class_day')
 
@@ -141,21 +143,21 @@ def home_page(request):
         hour = temp_end - temp_start
         class_ed["Rowspan"] = math.ceil(hour.total_seconds() / 1800)
     timetablestr = ""
-    #dictionary to hold weekday that should be skipped from printing td
+    # dictionary to hold weekday that should be skipped from printing td
     weekday = {"1": 0, "2": 0, "3": 0, "4": 0, "5": 0}
     class_type ={"L": "Lecture", "T": "Tutorial"}
     for time in time_formatted:
         timetablestr += "<tr>"
         timetablestr += f"<th scope=\"row\">{time}</th>"
-        #a week can only skip a single weekday
+        # a week can only skip a single weekday
         skipchance = {"1": 1, "2": 1, "3": 1, "4": 1,"5": 1}
-        #hold skipped days
+        # hold skipped days
         skipped = 0
         for days in range(1, 6):
-            #flag for searching classes
+            # flag for searching classes
             found = 0
             for lecture in lectures:
-                if lecture["Start_time"] == time and lecture["Weekday"] == str(days):#class found
+                if lecture["Start_time"] == time and lecture["Weekday"] == str(days): # class found
                     weekday[lecture["Weekday"]] += lecture["Rowspan"]
                     timetablestr += f"<td rowspan=\"{lecture['Rowspan']}\">"
                     timetablestr += f"<div class = \"box\"><span><a href='{lecture['Moodle_link']}'><b>{lecture['Code']}</b></a>"
@@ -166,14 +168,14 @@ def home_page(request):
                     found = 1
                     break
             if found == 0:
-                if weekday[str(days)] > 0 and skipchance[str(days)]: #skip the td 
+                if weekday[str(days)] > 0 and skipchance[str(days)]: # skip the td 
                     weekday[str(days)] -= 1
                     skipped += 1
                     continue
                 else:
                     timetablestr += "<td></td>"
           
-        for i in range(skipped):#add the skipped td back into the row
+        for i in range(skipped): # add the skipped td back into the row
             timetablestr += "<td></td>"
 
                 
@@ -198,8 +200,7 @@ def send_upcoming_classes(request):
     
     # do nothing if there is no upcoming class
     if len(upcoming_classes) == 0:
-        # return redirect("/schedule/home")
-        return JsonResponse({"msg": "No upcoming classes!" })
+        return HttpResponse(content="No upcoming class.")
 
     # otherwise, prepare the email
     subject = "[COMP3278 HKU ICMS] You have class in ONE hour!"
@@ -217,44 +218,41 @@ def send_upcoming_classes(request):
     message += "Regards,\nCOMP3278 HKU ICMS"
     
     # send the email
-    send_mail(
-        subject=subject,
-        message=message,
-        from_email=settings.EMAIL_HOST_USER,
-        recipient_list=[User.objects.get(pk=request.user.id).email]
-    )
+    try:
+        send_mail(
+            subject=subject,
+            message=message,
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[User.objects.get(pk=request.user.id).email]
+        )
+    except SMTPException:
+        return HttpResponse(content="FAILED to send email")
 
-    return JsonResponse({"msg": "Email sent!" })
+    return HttpResponse(content="Email sent SUCCESSFULLY.")
 
 def retrieve_upcoming_classes(user_id):
     result = []
     try:
         # Retrieve all user's enrolment
         user_all_enrolment = Enrolment.objects.filter(student=user_id)
-        print(user_all_enrolment)
 
         # Get the course in each enrolment record
         for enrolment in user_all_enrolment:
             user_registerd_course = Course.objects.get(pk=enrolment.course.id)
-            print("This course is:", user_registerd_course)
             classes = Class.objects.filter(course=user_registerd_course.id) # Retrieve all classess for this course
+            
             # Check if any of the classess is starting in less than one hour
             for a_class in classes:
-                print("a class:", a_class)
                 today_weekday = date.today().isoweekday() # mon: 1 ... sun: 7
                 the_class_day = int(a_class.class_day) # mon: 1 ... sun: 7
                 if today_weekday == the_class_day:
                     current_time = timedelta(hours=datetime.now().time().hour, minutes=datetime.now().time().minute)
                     the_class_time = timedelta(hours=a_class.start_time.hour, minutes=a_class.start_time.minute)
                     difference_in_time = the_class_time - current_time
-                    print("the class time:", the_class_time)
-                    print("the current time",current_time)
-                    print("Difference:", difference_in_time)
+
                     if difference_in_time.days <= -1:
-                        print("This class is already over or the class is ongoing")
                         continue
                     elif difference_in_time.seconds <= 3600: # 1 hour = 3600 seconds
-                        print("This class is starting in less than one hour")
                         temp = {
                             "code": user_registerd_course.code,
                             "name": user_registerd_course.name,
@@ -267,7 +265,6 @@ def retrieve_upcoming_classes(user_id):
                         }
                         result.append(temp)
                 else:
-                    print("This class is not today")
                     continue
         
         # After iterating all the enrolment record, return the array of upcoming classess

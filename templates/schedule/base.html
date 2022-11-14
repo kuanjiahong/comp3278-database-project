@@ -26,9 +26,11 @@
     </body>
     <script>
         function send_email(){
-            $.get('/send_to_email', (message) => {
-                alert(message)
-            })
+            $.get('/schedule/send_to_email', function(message) {
+                if (message == "No upcoming class.")
+                    $(location).attr("href", "/schedule/home");
+                alert(message);
+            });
         }
     </script>
 </html>
