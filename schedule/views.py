@@ -111,7 +111,6 @@ def home_page(request):
    # get enrolled courses of user and its corresponding classes
     courses_enrolled = Course.objects.filter(students = request.user)
     classes = Class.objects.filter(course__in = courses_enrolled).order_by('class_day')
-    teachings = Teaching.objects.filter(course__in = courses_enrolled)
    
 
     time_duration = [
@@ -135,14 +134,7 @@ def home_page(request):
             "Moodle_link": class_ed.course.moodle_link
         } for class_ed in classes
     ]
-    #fetch teachers teaching which course
-    teachers = [
-        {
-            "Teacher":teaches.staff.name,
-            "Type":teaches.role,
-            "Course_code":teaches.course.code
-        }for teaches in teachings
-    ]
+  
 
     # calculate rowspan for each class
     for class_ed in lectures:
@@ -176,13 +168,7 @@ def home_page(request):
                     timetablestr += f"{class_type[lecture['Type']]}<br />"
                     teachstr = ""
                     #search for lecturer for lectures / tutor for tutorials
-                    for teacher in teachers:
-                        if(teacher["Course_code"]==lecture['Code'] and lecture['Type']==teacher['Type']):
-                            teachstr += f"{teacher['Teacher']} "
-                    if(lecture['Type']=='T'):
-                        timetablestr += "Tutor: "+teachstr
-                    else:
-                        timetablestr += "Lecturer: "+teachstr
+                    
                     timetablestr += f"</span></div></td>"
                     found = 1
                     break
