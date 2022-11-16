@@ -27,6 +27,12 @@
     <div>Course name: {{ upcoming_class.name|default:"Not specified" }}</div>
     <div>Location: {{ upcoming_class.location|default:"Not specified" }}</div>
     <div>Time: {{ upcoming_class.start_time }} - {{ upcoming_class.end_time  }}</div>
+    {% if upcoming_class.lecturers %}
+    <div>Lecturers: {{ upcoming_class.lecturers }}</div>
+    {% endif %}
+    {% if upcoming_class.tutors %}
+    <div>Tutors: {{ upcoming_class.tutors }}</div>
+    {% endif %}
     <div>
         Teacher's message: {{ upcoming_class.teacher_message|default:"Not specified" }}</div>
     <div>
