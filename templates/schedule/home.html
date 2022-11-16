@@ -51,14 +51,24 @@
             Not available
         {% endif %}
     </div>
-    <button type="submit" class="btn btn-primary" onclick="send_email()">Send to email</button>
+    <button type="button" class="btn btn-primary" onclick="send_email()">Send to email</button>
     
 </section>
 {% endfor %}
 
 {% endif %}
 
-
 {% include "schedule/personal_timetable.html" %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+function send_email(){
+    $.get('/schedule/send_to_email', function(message) {
+        if (message == "No upcoming class.")
+            $(location).attr("href", "/schedule/home");
+        alert(message);
+    });
+}
+</script>
 
 {% endblock %}

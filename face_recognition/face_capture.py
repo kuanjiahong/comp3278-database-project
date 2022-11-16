@@ -1,18 +1,16 @@
 import cv2
 import os
-from tqdm import tqdm
 
 faceCascade = cv2.CascadeClassifier('haarcascade/haarcascade_frontalface_default.xml')
 
 video_capture = cv2.VideoCapture(0)
 
 # Specify the `user_name` and `NUM_IMGS` here.
-user_name = "huanpham@connect.hku.hk"
+user_name = "EMAIL_ADDRESS"
 NUM_IMGS = 400
 if not os.path.exists('data/{}'.format(user_name)):
     os.mkdir('data/{}'.format(user_name))
 
-cnt = 1
 font = cv2.FONT_HERSHEY_SIMPLEX
 bottomLeftCornerOfText = (350, 50)
 fontScale = 1
@@ -20,7 +18,7 @@ fontColor = (102, 102, 225)
 lineType = 2
 
 # Open camera
-for cnt in tqdm(range(1, NUM_IMGS + 1)):
+for cnt in range(1, NUM_IMGS + 1):
     # Capture frame-by-frame
     ret, frame = video_capture.read()
     frame_copy = frame.copy()
@@ -51,7 +49,6 @@ for cnt in tqdm(range(1, NUM_IMGS + 1)):
     cv2.imshow('Video', frame)
     # Store the captured images in `data/Jack`
     cv2.imwrite("data/{}/{}{:03d}.jpg".format(user_name, user_name, cnt), frame_copy)
-    cnt += 1
 
     key = cv2.waitKey(100)
 

@@ -1,6 +1,7 @@
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth import get_user_model
 from face_recognition.faces import face_recognition
+import os
 
 User = get_user_model()
 
@@ -13,6 +14,10 @@ class FaceRecognitionAuthBackend(ModelBackend):
         # differentiate login videos by csrf tokens
         csrf_token = request.COOKIES['csrftoken']
         face_auth_path = 'face_auth/face_auth_' + csrf_token
+
+        # check if face_auth exists in face_recognition
+        if (not os.path.exists('face_recognition/face_auth')):
+            os.mkdir('face_recognition/face_auth')
 
         # only accept videos in mp4 (Safari) or webm (Chrome/Firefox) format
         # save the video locally at face_recognition/face_auth/

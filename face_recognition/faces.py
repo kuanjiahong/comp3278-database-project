@@ -51,7 +51,6 @@ def face_recognition(face_auth_path):
                 stroke = 2
                 cv2.putText(frame, f"{name} conf={conf}", (x, y), font, 0.6, color, stroke, cv2.LINE_AA)
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), (2))
-                cv2.imwrite("face_auth/face_detected.jpg", frame)
                 
                 recognized = True
                 result = labels[id_]
