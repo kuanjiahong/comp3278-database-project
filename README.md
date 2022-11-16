@@ -44,7 +44,7 @@ Change the password right after the first login
 
 ### Configure an email address to send emails
 1. Open `icms/settings.py`
-2. Edit `EMAIL_HOST`, `EMAIL_HOST_USER`, and `EMAIL_HOST_PASSWORD`.
+2. Edit `EMAIL_HOST`, `EMAIL_HOST_USER`, and `EMAIL_HOST_PASSWORD`
 
 ### Add a new user
 1. Go to the admin page `[hostname]/admin`
