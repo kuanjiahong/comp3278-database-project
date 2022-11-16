@@ -51,7 +51,10 @@ Change the password right after the first login
 2. Go to Users and add a new user (email address)
 
 ### Add a new face for face recognition login
-1. Go to `face_recognition/` and run `python face_capture.py -u [EMAIL_ADDRESS] -n [NUMBER_OF_IMAGES]`
+1. Go to `face_recognition/` and run
+   
+   `python face_capture.py -u [EMAIL_ADDRESS] -n [NUMBER_OF_IMAGES]`
+
 2. Train the model: `python train.py`
 
 ## Run the server
