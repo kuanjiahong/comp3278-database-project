@@ -111,8 +111,8 @@ def home_page(request):
    # get enrolled courses of user and its corresponding classes
     courses_enrolled = Course.objects.filter(students = request.user)
     classes = Class.objects.filter(course__in = courses_enrolled).order_by('class_day')
-
-    upcoming_classes = retrieve_upcoming_classes(request.user.id)
+    teachings = Teaching.objects.filter(course__in = courses_enrolled)
+   
 
     time_duration = [
         "9:30AM","10:00AM", "10:30AM","11:00AM", "11:30AM","12:00PM", "12:30PM","1:00PM", "1:30PM",
@@ -135,6 +135,15 @@ def home_page(request):
             "Moodle_link": class_ed.course.moodle_link
         } for class_ed in classes
     ]
+    #fetch teachers teaching which course
+    teachers = [
+        {
+            "Teacher":teaches.staff.name,
+            "Type":teaches.role,
+            "Course_code":teaches.course.code
+        }for teaches in teachings
+    ]
+
     # calculate rowspan for each class
     for class_ed in lectures:
         dt = datetime.now()
@@ -164,7 +173,17 @@ def home_page(request):
                     timetablestr += f"<br >{lecture['Name']}<br />"
                     timetablestr += f"{lecture['Start_time'].strftime('%I:%M %p')} - {lecture['End_time'].strftime('%I:%M %p')}<br />"
                     timetablestr += f"{lecture['Location']}<br />"
-                    timetablestr += f"{class_type[lecture['Type']]}</span></div></td>"
+                    timetablestr += f"{class_type[lecture['Type']]}<br />"
+                    teachstr = ""
+                    #search for lecturer for lectures / tutor for tutorials
+                    for teacher in teachers:
+                        if(teacher["Course_code"]==lecture['Code'] and lecture['Type']==teacher['Type']):
+                            teachstr += f"{teacher['Teacher']} "
+                    if(lecture['Type']=='T'):
+                        timetablestr += "Tutor: "+teachstr
+                    else:
+                        timetablestr += "Lecturer: "+teachstr
+                    timetablestr += f"</span></div></td>"
                     found = 1
                     break
             if found == 0:
@@ -178,15 +197,13 @@ def home_page(request):
         for i in range(skipped): # add the skipped td back into the row
             timetablestr += "<td></td>"
 
-                
+        #close a row i.e. a time period
         timetablestr += "</tr>"
 
     context = {
         "last_login": request.user.last_login.astimezone(pytz.timezone("Asia/Hong_Kong")).strftime("%d/%m/%Y %I:%M %p"),
         "time_formatted": time_formatted,
-        # "classes": lectures,
         "timetablestr":timetablestr,
-        "upcoming_classes": upcoming_classes,
     }
     
     return render(request, "schedule/home.html", context)
