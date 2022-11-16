@@ -7,7 +7,7 @@ from django.conf import settings
 from django.http import HttpResponse
 from smtplib import SMTPException
 from datetime import datetime, date, timedelta
-from schedule.models import  Class, Enrolment, Course
+from schedule.models import  Class, Enrolment, Course, Teaching
 from users.models import User
 import pytz
 import math
@@ -207,6 +207,8 @@ def send_upcoming_classes(request):
         message += f"The class {upcoming_class['code']} {upcoming_class['name']} is starting soon.\n"
         message += f"Location: {upcoming_class['location']}\n"
         message += f"Time: {upcoming_class['start_time']} - {upcoming_class['end_time']}\n"
+        message += f"Lecturers: {upcoming_class['lecturers']}\n"
+        message += f"Tutors: {upcoming_class['tutors']}\n"
         if upcoming_class['teacher_message'] != "":
             message += f"Teacher's message: {upcoming_class['teacher_message']}\n"
         if upcoming_class['zoom_link'] != "":
@@ -237,6 +239,19 @@ def retrieve_upcoming_classes(user_id):
         # Get the course in each enrolment record
         for enrolment in user_all_enrolment:
             user_registerd_course = Course.objects.get(pk=enrolment.course.id)
+
+            all_staff_records = Teaching.objects.filter(course=user_registerd_course.id)
+            tutors = []
+            lecturers = []
+            for teach in all_staff_records:
+                if teach.role == "T":
+                    tutors.append(teach.staff.name)
+                elif teach.role == "L":
+                    lecturers.append(teach.staff.name)
+            
+            tutors = ", ".join(tutors)
+            lecturers = ", ".join(lecturers)
+
             classes = Class.objects.filter(course=user_registerd_course.id) # Retrieve all classess for this course
             
             # Check if any of the classess is starting in less than one hour
@@ -254,6 +269,8 @@ def retrieve_upcoming_classes(user_id):
                         temp = {
                             "code": user_registerd_course.code,
                             "name": user_registerd_course.name,
+                            "lecturers": lecturers,
+                            "tutors": tutors,
                             "location": a_class.location,
                             "start_time": a_class.start_time.strftime("%I:%M %p"),
                             "end_time": a_class.end_time.strftime("%I:%M %p"),
