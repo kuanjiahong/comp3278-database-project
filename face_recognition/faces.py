@@ -43,7 +43,7 @@ def face_recognition(face_auth_path):
             id_, conf = recognizer.predict(roi_gray)
             
             # If the face is recognized
-            if conf < 60:
+            if conf < 90:
                 # debugging information
                 font = cv2.FONT_HERSHEY_SIMPLEX
                 name = labels[id_]
@@ -59,11 +59,11 @@ def face_recognition(face_auth_path):
         
         if recognized:
             break
+    cap.release()
+    cv2.destroyAllWindows()
     os.remove(face_auth_path)
     if os.getcwd() != oldwd:
         os.chdir(oldwd)
-    cap.release()
-    cv2.destroyAllWindows()
     if recognized:
         return result
     return "UNKNOWN USER"
