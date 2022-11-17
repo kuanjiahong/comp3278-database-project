@@ -3,6 +3,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.core.mail import send_mail
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 from django.conf import settings
 from django.http import HttpResponse
 from smtplib import SMTPException
@@ -12,7 +14,6 @@ from users.models import User
 import pytz
 import math
 from datetime import datetime
-from django.http import JsonResponse
 
 def login_mainpage(request):
     # redirect to home if the user has logged in already
@@ -31,7 +32,12 @@ def login_mainpage(request):
         else:
             email = request.POST['email']
             password = request.POST['password']
-            user = authenticate(request=request, username=email, password=password)
+            try:
+                validate_email(email)
+            except ValidationError:
+                user = None
+            else:
+                user = authenticate(request=request, username=email, password=password)
             if user is None:
                 context = {"error": "Incorrect email or password"}
                 return render(request, 'schedule/login.html', context=context)
@@ -109,8 +115,8 @@ def view_logs(request):
 @login_required
 def home_page(request):
    # get enrolled courses of user and its corresponding classes
-    courses_enrolled = Course.objects.filter(students = request.user)
-    classes = Class.objects.filter(course__in = courses_enrolled).order_by('class_day')
+    courses_enrolled = Course.objects.filter(students=request.user, offered=True)
+    classes = Class.objects.filter(course__in=courses_enrolled).order_by('class_day')
    
 
     time_duration = [
@@ -166,9 +172,6 @@ def home_page(request):
                     timetablestr += f"{lecture['Start_time'].strftime('%I:%M %p')} - {lecture['End_time'].strftime('%I:%M %p')}<br />"
                     timetablestr += f"{lecture['Location']}<br />"
                     timetablestr += f"{class_type[lecture['Type']]}<br />"
-                    teachstr = ""
-                    #search for lecturer for lectures / tutor for tutorials
-                    
                     timetablestr += f"</span></div></td>"
                     found = 1
                     break
@@ -241,12 +244,11 @@ def retrieve_upcoming_classes(user_id):
     result = []
     try:
         # Retrieve all user's enrolment
-        user_all_enrolment = Enrolment.objects.filter(student=user_id)
+        user_all_enrolment = Enrolment.objects.filter(student=user_id, course__offered=True)
 
         # Get the course in each enrolment record
         for enrolment in user_all_enrolment:
             user_registerd_course = Course.objects.get(pk=enrolment.course.id)
-
             all_staff_records = Teaching.objects.filter(course=user_registerd_course.id)
             tutors = []
             lecturers = []

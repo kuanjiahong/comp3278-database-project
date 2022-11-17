@@ -1,6 +1,6 @@
 from operator import truediv
 from django.db import models
-from django.db.models import F
+from django.db.models import CheckConstraint, Q,F
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 from users.models import User
@@ -73,8 +73,8 @@ class Class(models.Model):
     class Meta:
         unique_together = ['course', 'class_id']
         constraints = [
-            models.CheckConstraint(
+            CheckConstraint(
                 name="valid_start_end_time",
-                check=models.Q(start_time__lt=F("end_time"))
+                check=Q(start_time__lt=F("end_time"))
             )
         ]
