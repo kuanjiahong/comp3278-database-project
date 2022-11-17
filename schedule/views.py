@@ -272,9 +272,7 @@ def retrieve_upcoming_classes(user_id):
                     the_class_time = timedelta(hours=a_class.start_time.hour, minutes=a_class.start_time.minute)
                     difference_in_time = the_class_time - current_time
 
-                    if difference_in_time.days <= -1:
-                        continue
-                    elif difference_in_time.seconds <= 3600: # 1 hour = 3600 seconds
+                    if difference_in_time.total_seconds() <= 3600 and difference_in_time.total_seconds() > 0: # 1 hour = 3600 seconds
                         temp = {
                             "code": user_registerd_course.code,
                             "name": user_registerd_course.name,
