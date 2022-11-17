@@ -129,15 +129,15 @@ def home_page(request):
     # fetch classes into dictionary
     lectures = [
         {
-            "Code": class_ed.course.code,
-            "Name": class_ed.course.name,
-            "Weekday": class_ed.class_day,
-            "Rowspan": 0,
-            "Start_time": class_ed.start_time,
-            "End_time": class_ed.end_time,
-            "Location": class_ed.location,
-            "Type": class_ed.class_type,
-            "Moodle_link": class_ed.course.moodle_link
+            "code": class_ed.course.code,
+            "name": class_ed.course.name,
+            "weekday": class_ed.class_day,
+            "row_span": 0,
+            "start_time": class_ed.start_time,
+            "end_time": class_ed.end_time,
+            "location": class_ed.location,
+            "type": class_ed.class_type,
+            "moodle_link": class_ed.course.moodle_link
         } for class_ed in classes
     ]
   
@@ -145,10 +145,10 @@ def home_page(request):
     # calculate rowspan for each class
     for class_ed in lectures:
         dt = datetime.now()
-        temp_start = datetime.combine(dt, class_ed["Start_time"])
-        temp_end = datetime.combine(dt, class_ed["End_time"])
+        temp_start = datetime.combine(dt, class_ed["start_time"])
+        temp_end = datetime.combine(dt, class_ed["end_time"])
         hour = temp_end - temp_start
-        class_ed["Rowspan"] = math.ceil(hour.total_seconds() / 1800)
+        class_ed["row_span"] = math.ceil(hour.total_seconds() / 1800)
     timetablestr = ""
     
     # dictionary to hold how many next rows to skip at each weekday column
@@ -163,17 +163,17 @@ def home_page(request):
             # flag for searching classes
             found = 0
             for lecture in lectures:
-                if lecture["Start_time"] == time and lecture["Weekday"] == str(days): # class found
+                if lecture["start_time"] == time and lecture["weekday"] == str(days): # class found
                     # skip the next (lecture's rowspan - 1) rows in the lecture's weekday column
-                    weekday_skip_next_rows[lecture["Weekday"]] += lecture["Rowspan"] - 1
+                    weekday_skip_next_rows[lecture["weekday"]] += lecture["row_span"] - 1
 
                     # add the lecture entry to the timetable
-                    timetablestr += f"<td rowspan=\"{lecture['Rowspan']}\">"
-                    timetablestr += f"<div class = \"box\"><span><a href='{lecture['Moodle_link']}'><b>{lecture['Code']}</b></a>"
-                    timetablestr += f"<br >{lecture['Name']}<br />"
-                    timetablestr += f"{lecture['Start_time'].strftime('%I:%M %p')} - {lecture['End_time'].strftime('%I:%M %p')}<br />"
-                    timetablestr += f"{lecture['Location']}<br />"
-                    timetablestr += f"{class_type[lecture['Type']]}<br />"
+                    timetablestr += f"<td rowspan=\"{lecture['row_span']}\">"
+                    timetablestr += f"<div class = \"box\"><span><a href='{lecture['moodle_link']}'><b>{lecture['code']}</b></a>"
+                    timetablestr += f"<br >{lecture['name']}<br />"
+                    timetablestr += f"{lecture['start_time'].strftime('%I:%M %p')} - {lecture['end_time'].strftime('%I:%M %p')}<br />"
+                    timetablestr += f"{lecture['location']}<br />"
+                    timetablestr += f"{class_type[lecture['type']]}<br />"
                     timetablestr += f"</span></div></td>"
                     found = 1
                     break
