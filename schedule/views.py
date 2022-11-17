@@ -190,7 +190,7 @@ def home_page(request):
         timetablestr += "</tr>"
 
 
-    upcoming_classes = retrieve_upcoming_classes(request.user.id)
+    upcoming_classes = retrieve_upcoming_classes(request)
 
     context = {
         "last_login": request.user.last_login.astimezone(pytz.timezone("Asia/Hong_Kong")).strftime("%d/%m/%Y %I:%M %p"),
@@ -204,7 +204,7 @@ def home_page(request):
 @login_required
 def send_upcoming_classes(request):
     # retrieve upcoming classes
-    upcoming_classes = retrieve_upcoming_classes(request.user.id)
+    upcoming_classes = retrieve_upcoming_classes(request)
     
     # do nothing if there is no upcoming class
     if len(upcoming_classes) == 0:
@@ -240,12 +240,12 @@ def send_upcoming_classes(request):
 
     return HttpResponse(content="Email sent SUCCESSFULLY.")
 
-def retrieve_upcoming_classes(user_id):
+@login_required
+def retrieve_upcoming_classes(request):
     result = []
     try:
         # Retrieve all user's enrolment
-        user_all_enrolment = Enrolment.objects.filter(student=user_id, course__offered=True)
-
+        user_all_enrolment = Enrolment.objects.filter(student=request.user, course__offered=True)
         # Get the course in each enrolment record
         for enrolment in user_all_enrolment:
             user_registerd_course = Course.objects.get(pk=enrolment.course.id)
