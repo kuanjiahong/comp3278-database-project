@@ -163,8 +163,6 @@ def home_page(request):
             # flag for searching classes
             found = 0
             for lecture in lectures:
-                if lecture["Code"] == "COMP7904_1A":
-                    print(lecture["Weekday"])
                 if lecture["Start_time"] == time and lecture["Weekday"] == str(days): # class found
                     # skip the next (lecture's rowspan - 1) rows in the lecture's weekday column
                     weekday_skip_next_rows[lecture["Weekday"]] += lecture["Rowspan"] - 1
