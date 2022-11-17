@@ -186,10 +186,14 @@ def home_page(request):
         #close a row i.e. a time period
         timetablestr += "</tr>"
 
+
+    upcoming_classes = retrieve_upcoming_classes(request.user.id)
+
     context = {
         "last_login": request.user.last_login.astimezone(pytz.timezone("Asia/Hong_Kong")).strftime("%d/%m/%Y %I:%M %p"),
         "time_formatted": time_formatted,
         "timetablestr":timetablestr,
+        "upcoming_classes": upcoming_classes,
     }
     
     return render(request, "schedule/home.html", context)
