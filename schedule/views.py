@@ -217,8 +217,8 @@ def send_upcoming_classes(request):
         message += f"The class {upcoming_class['code']} {upcoming_class['name']} is starting soon.\n"
         message += f"Location: {upcoming_class['location']}\n"
         message += f"Time: {upcoming_class['start_time']} - {upcoming_class['end_time']}\n"
-        message += f"Lecturers: {upcoming_class['lecturers']}\n"
-        message += f"Tutors: {upcoming_class['tutors']}\n"
+        message += f"Lecturer(s): {upcoming_class['lecturers']}\n"
+        message += f"Tutor(s): {upcoming_class['tutors']}\n"
         if upcoming_class['teacher_message'] != "":
             message += f"Teacher's message: {upcoming_class['teacher_message']}\n"
         if upcoming_class['zoom_link'] != "":
