@@ -150,8 +150,10 @@ def home_page(request):
         hour = temp_end - temp_start
         class_ed["Rowspan"] = math.ceil(hour.total_seconds() / 1800)
     timetablestr = ""
-    # dictionary to hold weekday that should be skipped in the next time rows
+    
+    # dictionary to hold how many next rows to skip at each weekday column
     weekday_skip_next_rows = {"1": 0, "2": 0, "3": 0, "4": 0, "5": 0}
+    
     class_type ={"L": "Lecture", "T": "Tutorial"}
     for time in time_formatted:
         timetablestr += "<tr>"
@@ -164,7 +166,10 @@ def home_page(request):
                 if lecture["Code"] == "COMP7904_1A":
                     print(lecture["Weekday"])
                 if lecture["Start_time"] == time and lecture["Weekday"] == str(days): # class found
+                    # skip the next (lecture's rowspan - 1) rows in the lecture's weekday column
                     weekday_skip_next_rows[lecture["Weekday"]] += lecture["Rowspan"] - 1
+
+                    # add the lecture entry to the timetable
                     timetablestr += f"<td rowspan=\"{lecture['Rowspan']}\">"
                     timetablestr += f"<div class = \"box\"><span><a href='{lecture['Moodle_link']}'><b>{lecture['Code']}</b></a>"
                     timetablestr += f"<br >{lecture['Name']}<br />"
@@ -174,14 +179,20 @@ def home_page(request):
                     timetablestr += f"</span></div></td>"
                     found = 1
                     break
+            
+            # if no class is found
             if found == 0:
-                if weekday_skip_next_rows[str(days)] > 0: # skip the td
+                # check if the weekday row is to skip
+                if weekday_skip_next_rows[str(days)] > 0:
+                    # subtract one row as it is skipped
                     weekday_skip_next_rows[str(days)] -= 1
                     continue
+
+                # otherwise print an empty weekday row
                 else:
                     timetablestr += "<td></td>"
 
-        #close a row i.e. a time period
+        # close a row i.e. a time period
         timetablestr += "</tr>"
 
 
