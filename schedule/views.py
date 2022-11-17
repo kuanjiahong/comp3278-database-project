@@ -150,22 +150,23 @@ def home_page(request):
         hour = temp_end - temp_start
         class_ed["Rowspan"] = math.ceil(hour.total_seconds() / 1800)
     timetablestr = ""
-    # dictionary to hold weekday that should be skipped from printing td
-    weekday = {"1": 0, "2": 0, "3": 0, "4": 0, "5": 0}
+    # dictionary to hold weekday that should be skipped in the next time rows
+    weekday_skip_next_rows = {"1": 0, "2": 0, "3": 0, "4": 0, "5": 0}
+    # a week can only skip a single weekday
+    # skipchance = {"1": 1, "2": 1, "3": 1, "4": 1,"5": 1}
     class_type ={"L": "Lecture", "T": "Tutorial"}
     for time in time_formatted:
         timetablestr += "<tr>"
         timetablestr += f"<th scope=\"row\">{time.strftime('%I:%M%p')}</th>"
-        # a week can only skip a single weekday
-        skipchance = {"1": 1, "2": 1, "3": 1, "4": 1,"5": 1}
-        # hold skipped days
-        skipped = 0
+
         for days in range(1, 6):
             # flag for searching classes
             found = 0
             for lecture in lectures:
+                if lecture["Code"] == "COMP7904_1A":
+                    print(lecture["Weekday"])
                 if lecture["Start_time"] == time and lecture["Weekday"] == str(days): # class found
-                    weekday[lecture["Weekday"]] += lecture["Rowspan"]
+                    weekday_skip_next_rows[lecture["Weekday"]] += lecture["Rowspan"] - 1
                     timetablestr += f"<td rowspan=\"{lecture['Rowspan']}\">"
                     timetablestr += f"<div class = \"box\"><span><a href='{lecture['Moodle_link']}'><b>{lecture['Code']}</b></a>"
                     timetablestr += f"<br >{lecture['Name']}<br />"
@@ -176,15 +177,11 @@ def home_page(request):
                     found = 1
                     break
             if found == 0:
-                if weekday[str(days)] > 0 and skipchance[str(days)]: # skip the td 
-                    weekday[str(days)] -= 1
-                    skipped += 1
+                if weekday_skip_next_rows[str(days)] > 0: # skip the td
+                    weekday_skip_next_rows[str(days)] -= 1
                     continue
                 else:
                     timetablestr += "<td></td>"
-          
-        for i in range(skipped): # add the skipped td back into the row
-            timetablestr += "<td></td>"
 
         #close a row i.e. a time period
         timetablestr += "</tr>"
