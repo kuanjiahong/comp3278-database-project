@@ -152,8 +152,6 @@ def home_page(request):
     timetablestr = ""
     # dictionary to hold weekday that should be skipped in the next time rows
     weekday_skip_next_rows = {"1": 0, "2": 0, "3": 0, "4": 0, "5": 0}
-    # a week can only skip a single weekday
-    # skipchance = {"1": 1, "2": 1, "3": 1, "4": 1,"5": 1}
     class_type ={"L": "Lecture", "T": "Tutorial"}
     for time in time_formatted:
         timetablestr += "<tr>"
