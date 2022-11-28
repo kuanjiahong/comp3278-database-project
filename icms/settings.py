@@ -87,11 +87,14 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
+        # Configure the below values according to your MySQL database settings
         'NAME': 'comp3278',
         'USER': 'root',
         'PASSWORD': 'comp3278',
         'HOST': 'localhost',
         'PORT': '3306',
+
+        # Disable the above lines and enable these below lines to use sqlite3
         # 'ENGINE': 'django.db.backends.sqlite3',
         # 'NAME': BASE_DIR / 'db.sqlite3',
     }

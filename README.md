@@ -9,24 +9,10 @@ HKU ICMS Intelligent Course Management System
 3. Install the packages needed: `pipenv install`
 
 ### Configure MySQL database
-
-1. Install MySQL with username `root` and password `comp3278` (can be modified in `settings.py`)
-2. Create a database named `comp3278`
-
-   `mysql -u root -p`
-
-   `create database comp3278;`
-
-   `exit;`
-
-3. Load db.sql to database `comp3278`
-
-   `mysql -u root -p comp3278 < db.sql`
-
-If you wish to use your existing MySQL database,
-1. Go to `settings.py` under `icms` directory
+Prepare your own empty MySQL database, then:
+1. Go to `settings.py` under `icms/`
 2. Ctrl-F search `DATABASES`
-3. Modify `NAME` (i.e. your database name), `USER`, `PASSWORD` to your own settings
+3. Modify `NAME` (i.e. your database name), `USER`, `PASSWORD`, `HOST`, and `PORT` to your own settings
 
 If the project failed to run due to missing `/usr/local/lib/libmysqlclient.21.dylib`,
 
@@ -36,11 +22,7 @@ If the project failed to run due to missing `/usr/local/lib/libmysqlclient.21.dy
    `ln -s /usr/local/mysql/lib/libmysqlclient.21.dylib /usr/local/lib/libmysqlclient.21.dylib`
 
 ### Default admin account
-Username: `admin@cs.hku.hk`
-
-Password: `comp3278`
-
-Change the password right after the first login
+Run `python manage.py createsuperuser` to create an admin account
 
 ### Configure an email address to send emails
 1. Open `icms/settings.py`
